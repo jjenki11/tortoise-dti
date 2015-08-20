@@ -11,7 +11,7 @@ tar -xzvf node-v0.12.7.tar.gz
 
 cd node-v0.12.7 && ./configure && make && make install
 
-cd ../../Tortoise-Web-Services
+cd ../../Tortoise-Web-Services/Server
 
 echo "build all of our node modules"
 
