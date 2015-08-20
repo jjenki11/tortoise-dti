@@ -1,0 +1,18 @@
+!README!
+
+THIS IS THE SERVER SIDE PROJECTS DIRECTORY.
+
+PLEASE UTILIZE THE FOLLOWING PATTERN WHEN MAKING ANY NEW PROJECT FOLDER HEIRARCHY!
+
+
+Projects
+|
+|
+----- <project_name>
+|
+|
+---------- patients
+---------- controls
+---------- atlas
+---------- working
+---------- working_atlas
