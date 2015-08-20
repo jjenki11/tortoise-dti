@@ -1,0 +1,19 @@
+.plumber {
+    background-color: white;
+    border: 3px solid #346789;
+    color: black;
+    font-family: helvetica;
+    font-size: 0.8em;
+    height: 12em;
+    opacity: 0.8;
+    padding: 0.5em;
+    position: absolute;
+    width: 14em;
+    z-index: 20;
+    text-align:center;
+}
+
+.dragActive {
+    border: 3px solid #346789;
+}
+

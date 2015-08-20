@@ -1,0 +1,16 @@
+#!/bin/bash
+
+input_name=$(basename "$1")
+output_path=$3
+echo "FJDKFJKDJFKDJFJDKFJD $3"
+pushd $PWD
+
+cd /raid1b/STBBapps/DTIREG/bin
+nchars=${#input_name}
+ORIGINAL=${input_name:0:nchars-4}; #to remove .nii
+echo "ORIGINAL !  "${ORIGINAL}
+
+CombineTransformationsWithOutputName -out $3 -trans $1 $2
+
+popd
+#exit

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+    <head>
+	    <title>NIH Pediatric Neuroimaging Diffusion Tensor MRI Center - Home</title>
+        <meta charset="UTF-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">	    
+	    <script src="js/vendor/jquery-1.11.3.min.js"></script>
+        <script src="js/vendor/jquery-ui-1.11.4.custom/jquery-ui.js"></script>
+	    <script src="js/vendor/modernizr.custom.23937.js"></script>
+	    <script src="js/SiteAPI.js"></script>
+	    <script type="text/javascript" src="js/vendor/xtk.js"></script>
+    </head>
+
+    <body>
+        <script>
+            $(function(){   
+                         
+                console.log("YOYOYO");           
+                     
+                var api = new SiteAPI();          
+                      
+                var omg = api.init();            
+                    
+                var divvy = $('<div></div>');        
+                        
+                setTimeout(function(){
+                    document.title = omg;
+                    $("body").append(api.fullViewer());                    
+                    $("body").append(api.embeddedViewer());
+                }, 2000);
+                
+                
+            });
+        </script>
+	    <p> 
+		    <b>WHY</b> HELLO THERE!
+	    </p>
+    </body>
+</html>

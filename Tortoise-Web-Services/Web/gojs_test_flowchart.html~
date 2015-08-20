@@ -1,0 +1,1066 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Flowchart</title>
+<!-- Copyright 1998-2015 by Northwoods Software Corporation. -->
+<meta charset="UTF-8">
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">	    
+        	<!-- iOS meta tags -->
+    	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
+    	<meta name="apple-mobile-web-app-capable" content="yes">
+    	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+    <link rel="stylesheet" type="text/css" media="screen" href="css/droppable_layout.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="css/droppable_widget.js.css" />
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <link href="js/vendor/jquery-ui-1.9.2/themes/base/minified/jquery-ui.min.css" rel="stylesheet" type="text/css">
+    <link href="css/examples.css" rel="stylesheet" type="text/css">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="js/vendor/modernizr.custom.23937.js"></script>
+    <script src="js/vendor/jquery-ui-1.11.4.custom/jquery-ui.js"></script>
+    <script src="js/vendor/jquery-1.11.3.min.js"></script>
+    <script src="js/SiteAPI.js"></script>
+    <script src="js/TortoiseSceneGraph.js"></script>
+
+		      <link rel="stylesheet" type="text/css" href="js/papaya/Papaya-master/build/papaya.css?version=0.8&build=884" />
+  	<script type="text/javascript" src="js/papaya/Papaya-master/build/papaya.js?version=0.8&build=884"></script>
+  	<script src="js/PapayaHelper.js" type="text/javascript"></script> 
+  	        <script type="text/javascript" src="js/vendor/jquery.layout-latest.js"></script>
+        <script language="javascript" type="text/javascript" src="js/vendor/flot/jquery.flot.js"></script>
+        <script language="javascript" type="text/javascript" src="js/vendor/flot/jquery.flot.time.js"></script>
+        <script language="javascript" type="text/javascript" src="js/vendor/flot/jquery.flot.selection.js"></script>
+        <script language="javascript" type="text/javascript" src="js/vendor/flot/jquery.flot.symbol.js"></script>	
+        <script language="javascript" type="text/javascript" src="js/mathPack.js"></script>	
+        <script language="javascript" type="text/javascript" src="js/MathPack2.js"></script>	
+        <script language="javascript" type="text/javascript" src="js/imageTools.js"></script>	
+        <script language="javascript" type="text/javascript" src="js/pluginHandler.js"></script>	
+        
+        <script language="javascript" type="text/javascript" src="js/ObjectManager.js"></script>
+  	        <script src="http://code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
+  	        <script src="js/vendor/modernizr.custom.23937.js"></script>
+    <script type="text/javascript" src="js/vendor/xtk.js"></script>
+    <link href="css/plumber.css" rel="stylesheet">
+    <script type="text/javascript" src="js/vendor/jquery-latest.js"></script>
+    <script type="text/javascript" src="js/vendor/jquery-ui-latest.js"></script>
+    <script type="text/javascript" src="js/vendor/jquery.layout-latest.js"></script>
+    <script src="js/vendor/jquery.jsPlumb-1.4.1-all.js"></script>
+    <script language="javascript" type="text/javascript" src="http://localhost:8444/socket.io/socket.io.js"></script>
+    <script language="javascript" type="text/javascript" src="js/nodeconnection.js"></script>
+    <script language="javascript" type="text/javascript" src="js/userHistory.js"></script>	
+    <script src="js/vendor/modernizr.custom.23937.js"></script>
+    <script language="javascript" type="text/javascript" src="js/vendor/jquery-dialogextend-master/build/jquery.dialogextend.js"></script>
+    <script language="javascript" type="text/javascript" src="js/userProfile.js"></script>
+    <script language="javascript" type="text/javascript" src="js/signInDialog.js"></script>
+    <script type="text/javascript" src="js/vendor/jquery.layout-latest.js"></script>
+    <script language="javascript" type="text/javascript" src="js/vendor/flot/jquery.flot.js"></script>
+    <script language="javascript" type="text/javascript" src="js/vendor/flot/jquery.flot.time.js"></script>
+    <script language="javascript" type="text/javascript" src="js/vendor/flot/jquery.flot.selection.js"></script>
+    <script language="javascript" type="text/javascript" src="js/vendor/flot/jquery.flot.symbol.js"></script>	
+    <script language="javascript" type="text/javascript" src="js/mathPack.js"></script>	
+    <script language="javascript" type="text/javascript" src="js/MathPack2.js"></script>	
+    <script language="javascript" type="text/javascript" src="js/imageTools.js"></script>	
+    <script language="javascript" type="text/javascript" src="js/pluginHandler.js"></script>	
+    <script language="javascript" type="text/javascript" src="js/HashTable.js"></script>
+    <script language="javascript" type="text/javascript" src="js/SensoryManager.js"></script>    
+    <script language="javascript" type="text/javascript" src="js/UIManager.js"></script>
+    <script language="javascript" type="text/javascript" src="http://localhost:8444/socket.io/socket.io.js"></script>
+    <script language="javascript" type="text/javascript" src="js/nodeconnection.js"></script>	
+    <script language="javascript" type="text/javascript" src="js/userHistory.js"></script>
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <script src="http://code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
+<script src="js/vendor/go.js"></script>
+<script src="js/vendor/contextMenu.js"></script>
+<link rel="stylesheet" type="text/css" media="screen" href="js/vendor/css/contextMenu.css" />
+<script language="javascript" type="text/javascript" src="js/vendor/jquery.contextmenu.js"></script>
+		        <script language="javascript" type="text/javascript" src="http://localhost:8444/socket.io/socket.io.js"></script>
+        <script language="javascript" type="text/javascript" src="js/nodeconnection.js"></script>
+
+
+    <!-- Bootstrap Core CSS -->
+    <link href="js/vendor/bootstrap-admin/startbootstrap-sb-admin-2-1.0.7/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- MetisMenu CSS -->
+    <link href="js/vendor/bootstrap-admin/startbootstrap-sb-admin-2-1.0.7/bower_components/metisMenu/dist/metisMenu.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="js/vendor/bootstrap-admin/startbootstrap-sb-admin-2-1.0.7/dist/css/sb-admin-2.css" rel="stylesheet">
+
+    <!-- Custom Fonts -->
+    <link href="js/vendor/bootstrap-admin/startbootstrap-sb-admin-2-1.0.7/bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+
+    <style>
+        body {
+            width:1000px;
+            margin:0 auto;
+            background:white;
+        }
+        .loremisum {
+            font-size:14pt;
+            margin:20px;
+        }
+        .smallViewer {
+            margin:20px;width:500px;height:415px;
+        }
+        .left {
+            float: left;
+        }
+        .right {
+            float: right;
+        }
+    </style>
+
+    <script type="text/javascript">
+        var params1 = [];
+        params1["worldSpace"] = true;
+        params1["images"] = ["js/papaya/Papaya-master/data/sample_image.nii.gz"];
+        params1["kioskMode"] = true;
+        params1["showControlBar"] = true;
+        var params2 = [];
+        params2["worldSpace"] = true;
+        params2["images"] = ["js/papaya/Papaya-master/data/sample_image.nii.gz"];
+        params2["expandable"] = true;
+    </script>
+
+<style type="text/css">
+      .btn-file {
+        position: relative;
+        overflow: hidden;
+    }
+    .btn-file input[type=file] {
+        position: absolute;
+        top: 0;
+        right: 0;
+        min-width: 100%;
+        min-height: 100%;
+        font-size: 100px;
+        text-align: right;
+        filter: alpha(opacity=0);
+        opacity: 0;
+        outline: none;
+        background: white;
+        cursor: inherit;
+        display: block;
+    }
+    
+
+
+.col-sm-4:not(:last-child) {
+    border-right: 1px solid #ccc;
+}
+.col-centered{
+    float: none;
+    margin: 0 auto;
+}
+</style>
+
+<script type="text/javascript">
+  var sock = new nodeConnection();
+    sock.init();
+    var ui;
+    var mri = new PapayaHelper(ui);
+		      mri.init();	
+    
+  $(document).ready(function(){
+    init();
+      //$("#input_content").hide();
+      $("#sample_visualize").show();
+      ui = new UIManager();
+      var params = [];
+      var params2 = [];
+        params2["worldSpace"] = true;
+        params2["images"] = ["js/papaya/Papaya-master/data/sample_image.nii.gz"];
+        params2["expandable"] = true;
+      
+      $('.btn-file :file').on('fileselect', function(event, numFiles, label) {
+            console.log(numFiles);
+            console.log(label);
+            sock.send('get_file', {txt: label});
+        });
+        
+        $('#pipeline').on('click', function(event, ui) {
+            /*
+            console.log(event);
+            console.log(ui);
+            */
+            console.log("START PIPELINE");
+            
+            $("#sample_progress").hide();
+            $("#sample_visualize").hide();
+            $("#sample_pipeline").show();
+            //sock.send('get_file', {txt: label});
+        });
+        
+        $('#progress_monitor').on('click', function(event, ui) {
+            /*
+            console.log(event);
+            console.log(ui);
+            */
+            console.log("MONITOR PROGRESS");
+            $("#sample_pipeline").hide();
+            
+            $("#sample_visualize").hide();
+            $("#sample_progress").show();
+            
+            //sock.send('get_file', {txt: label});
+        });
+        
+        $('#visualize_stuff').on('click', function(event, ui) {
+            console.log("VISUALIZE STUFF");
+            $("#sample_pipeline").hide();
+            $("#sample_progress").hide();
+            $("#sample_visualize").show();
+            $("#pipeline_title").html(JSON.parse(document.getElementById("mySavedModel").value).name);
+            $("#pipeline_title").show();
+            
+            //sock.send('get_file', {txt: label});
+        });
+        $("#sample_visualize").show();
+        $("#sample_pipeline").hide();
+        $("#sample_progress").hide();
+        $("#sample_visualize").hide();
+    });
+    
+    $(document).on('change', '.btn-file :file', function() {
+      var input = $(this),
+          numFiles = input.get(0).files ? input.get(0).files.length : 1,
+          label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
+      input.trigger('fileselect', [numFiles, label]);
+      
+    });
+</script>
+<script id="code">
+      
+  function init() {
+    
+    if (window.goSamples) goSamples();  // init for these samples -- you don't need to call this
+    var $go = go.GraphObject.make;  // for conciseness in defining templates
+    myDiagram =
+      $go(go.Diagram, "myDiagram",  // must name or refer to the DIV HTML element
+        {
+          initialContentAlignment: go.Spot.Center,
+          allowDrop: true,  // must be true to accept drops from the Palette
+          "LinkDrawn": showLinkLabel,  // this DiagramEvent listener is defined below
+          "LinkRelinked": showLinkLabel,
+          "animationManager.duration": 000001, // slightly longer than default (600ms) animation
+          "undoManager.isEnabled": true  // enable undo & redo
+        });
+    // when the document is modified, add a "*" to the title and enable the "Save" button
+    myDiagram.addDiagramListener("Modified", function(e) {
+      var button = document.getElementById("SaveButton");
+      
+      if (button) button.disabled = !myDiagram.isModified;
+      var idx = document.title.indexOf("*");
+      if (myDiagram.isModified) {
+        if (idx < 0) document.title += "*";
+      } else {
+        if (idx >= 0) document.title = document.title.substr(0, idx);
+      }
+      $("#sample_pipeline").hide();
+    });
+      
+    function showMessage(s) {
+      sock.send('atlas', {txt: s});
+        
+    }
+    myDiagram.addDiagramListener("ObjectSingleClicked",
+      function(e) {
+        var part = e.subject.part;
+        if (!(part instanceof go.Link))
+        {
+          showMessage("Clicked on " + part.data.text + "  ya diiiig?");
+          
+          console.log("Category => "+part.data.category);
+          console.log("Value => "+part.data.text);
+          console.log("ID       => "+part.data.id);
+          console.log("PART ->>> ", part);
+          
+          if(part.data.id === "THE_APPLY_DTIREG")
+          {
+            console.log("PATH = ",part.data.path);
+
+            $("#input_content").show();           
+            //$("#mySavedModel").hide();
+
+          }
+
+        }
+        
+      }
+    );
+    
+    myDiagram.addDiagramListener("ObjectContextClicked",
+      function(e) {
+        var part = e.subject.part;
+        if (!(part instanceof go.Link))
+        {
+          showMessage("Clicked on " + part.data.text + "  ya diiiig?");
+          
+          
+          
+          console.log("Category => "+part.data.category);
+          console.log("Value => "+part.data.text);
+          console.log("ID       => "+part.data.id);
+          console.log("PART ->>> ", part);
+          
+          if(part.data.id === "THE_APPLY_DTIREG")
+          {
+            console.log("RIGHT CLICK OCCURED");
+             
+            
+            $("#input_content").hide();           
+            
+            //$("#mySavedModel").hide();
+            ui.addProgressItem();
+          }
+          
+          if(part.data.id === "VISUALIZE")
+          {
+            $("#checkers").show();
+            //ui.derivedValuesForm();
+          }
+          
+          if(part.data.id === "THE_COMB_DISP")
+          {
+            sock.send('combine_xform', {
+                    src: '/raid1e/Jeff/cpp_test_data/patients/PAT_100_SCAN2_N1_DT_aff.txt', 
+                    tgt: '/raid1e/Jeff/cpp_test_data/patients/PAT_100_SCAN2_N1_DT_deffield_MINV.nii', 
+                    out: '/stbb_home/jenkinsjc/Desktop/combined_displacement_testeez.nii'
+            });
+          }
+          
+          if(part.data.id === "THE_APPLY_TTT")
+          {
+            sock.send('apply_ttt_xform', {
+                    orig: '/raid1e/Jeff/cpp_test_data/patients/PAT_100_SCAN2_N1_DT.nii', 
+                    disp: '/stbb_home/jenkinsjc/Desktop/combined_displacement_testeez.nii', 
+                    out: '/stbb_home/jenkinsjc/Desktop/output_PAT_100_SCAN2_N1_DT_testeez.nii'
+            });          
+          }          
+        }        
+      }
+    );
+        
+    // helper definitions for node templates
+    function nodeStyle() {
+      return [
+        // The Node.location comes from the "loc" property of the node data,
+        // converted by the Point.parse static method.
+        // If the Node.location is changed, it updates the "loc" property of the node data,
+        // converting back using the Point.stringify static method.
+        new go.Binding("location", "loc", go.Point.parse).makeTwoWay(go.Point.stringify),
+        {
+          // the Node.location is at the center of each node
+          locationSpot: go.Spot.Center,
+          //isShadowed: true,
+          //shadowColor: "#888",
+          // handle mouse enter/leave events to show/hide the ports
+          
+          mouseEnter: function (e, obj) { showPorts(obj.part, true); console.log("EVENT IN DGM LISTNER! : ->  ",obj); },
+          mouseLeave: function (e, obj) { showPorts(obj.part, false); }
+        }
+      ];
+    }
+    // Define a function for creating a "port" that is normally transparent.
+    // The "name" is used as the GraphObject.portId, the "spot" is used to control how links connect
+    // and where the port is positioned on the node, and the boolean "output" and "input" arguments
+    // control whether the user can draw links from or to the port.
+    function makePort(name, spot, output, input) {
+      // the port is basically just a small circle that has a white stroke when it is made visible
+      return $go(go.Shape, "Circle",
+               {
+                  fill: "transparent",
+                  stroke: null,  // this is changed to "white" in the showPorts function
+                  desiredSize: new go.Size(8, 8),
+                  alignment: spot, alignmentFocus: spot,  // align the port on the main Shape
+                  portId: name,  // declare this object to be a "port"
+                  fromSpot: spot, toSpot: spot,  // declare where links may connect at this port
+                  fromLinkable: output, toLinkable: input,  // declare whether the user may draw links to/from here
+                  cursor: "pointer"  // show a different cursor to indicate potential link point
+               });
+    }
+    // define the Node templates for regular nodes
+    var lightText = 'whitesmoke';
+    myDiagram.nodeTemplateMap.add("",  // the default category
+      $go(go.Node, "Spot", nodeStyle(),
+        // the main object is a Panel that surrounds a TextBlock with a rectangular Shape
+        $go(go.Panel, "Auto",
+          $go(go.Shape, "Rectangle",
+            { fill: "#00A9C9", stroke: null },
+            new go.Binding("figure", "figure")),
+          $go(go.TextBlock,
+            {
+              font: "bold 11pt Helvetica, Arial, sans-serif",
+              stroke: lightText,
+              margin: 8,
+              maxSize: new go.Size(160, NaN),
+              wrap: go.TextBlock.WrapFit,
+              editable: true
+            },
+            new go.Binding("text").makeTwoWay())
+        ),
+        // four named ports, one on each side:
+        makePort("T", go.Spot.Top, false, true),
+        makePort("L", go.Spot.Left, true, true),
+        makePort("R", go.Spot.Right, true, true),
+        makePort("B", go.Spot.Bottom, true, false)
+      ));
+    myDiagram.nodeTemplateMap.add("Start",
+      $go(go.Node, "Spot", nodeStyle(),
+        $go(go.Panel, "Auto",
+          $go(go.Shape, "Circle",
+            { minSize: new go.Size(40, 40), fill: "#79C900", stroke: null }),
+          $go(go.TextBlock, "Start",
+            { font: "bold 11pt Helvetica, Arial, sans-serif", stroke: lightText },
+            new go.Binding("text")
+          )
+        ),
+        // three named ports, one on each side except the top, all output only:
+        makePort("L", go.Spot.Left, true, false),
+        makePort("R", go.Spot.Right, true, false),
+        makePort("B", go.Spot.Bottom, true, false)
+      ));
+     myDiagram.nodeTemplateMap.add("Group",
+      $go(go.Node, "Spot", nodeStyle(),
+        $go(go.Panel, "Auto",
+          $go(go.Shape, "Circle",
+            { minSize: new go.Size(40, 40), fill: "#ABCDBC", stroke: null }),
+          $go(go.TextBlock, "Group",
+            { font: "bold 11pt Helvetica, Arial, sans-serif", stroke: lightText },
+            new go.Binding("text"))
+        ),
+        // three named ports, one on each side except the top, all output only:
+        makePort("T", go.Spot.Top, false, true),
+        makePort("L", go.Spot.Left, true, false),
+        makePort("R", go.Spot.Right, true, false),
+        makePort("B", go.Spot.Bottom, true, false)
+      )); 
+      
+      myDiagram.nodeTemplateMap.add("Subject",
+      $go(go.Node, "Spot", nodeStyle(),
+        $go(go.Panel, "Auto",
+          $go(go.Shape, "Circle",
+            { minSize: new go.Size(40, 40), fill: "#CBABCD", stroke: null }),
+          $go(go.TextBlock, "Subject",
+            { font: "bold 11pt Helvetica, Arial, sans-serif", stroke: lightText },
+            new go.Binding("text"))
+        ),
+        // three named ports, one on each side except the top, all output only:
+        makePort("T", go.Spot.Top, false, true),
+        makePort("L", go.Spot.Left, true, false),
+        makePort("R", go.Spot.Right, true, false),
+        makePort("B", go.Spot.Bottom, true, false)
+      )); 
+      
+      myDiagram.nodeTemplateMap.add("combine_Xform",
+      $go(go.Node, "Spot", nodeStyle(),
+        $go(go.Panel, "Auto",
+          $go(go.Shape, "Circle",
+            { minSize: new go.Size(10, 10), fill: "#009922", stroke: null }),
+          $go(go.TextBlock, "Xform \nComb. \nDisp.",
+            { font: "bold 11pt Helvetica, Arial, sans-serif", stroke: lightText },
+            new go.Binding("text"))
+        ),
+        // three named ports, one on each side except the top, all output only:
+        makePort("T", go.Spot.Top, false, true),
+        makePort("L", go.Spot.Left, true, false),
+        makePort("R", go.Spot.Right, true, false),
+        makePort("B", go.Spot.Bottom, true, false)
+      )); 
+      
+      myDiagram.nodeTemplateMap.add("ApplyTTT_Xform",
+      $go(go.Node, "Spot", nodeStyle(),
+        $go(go.Panel, "Auto",
+          $go(go.Shape, "Circle",
+            { minSize: new go.Size(10, 10), fill: "#DD0022", stroke: null }),
+          $go(go.TextBlock, "Xform \nApp. \nTrans.",
+            { font: "bold 11pt Helvetica, Arial, sans-serif", stroke: lightText },
+            new go.Binding("text"))
+        ),
+        // three named ports, one on each side except the top, all output only:
+        makePort("T", go.Spot.Top, false, true),
+        makePort("L", go.Spot.Left, true, false),
+        makePort("R", go.Spot.Right, true, false),
+        makePort("B", go.Spot.Bottom, true, false)
+      )); 
+      
+      myDiagram.nodeTemplateMap.add("DTIREG_Xform",
+      $go(go.Node, "Spot", nodeStyle(),
+        $go(go.Panel, "Auto",
+          $go(go.Shape, "Circle",
+            { minSize: new go.Size(10, 10), fill: "#001122", stroke: null }),
+          $go(go.TextBlock, "Xform \nDTI \nREG.",
+            { font: "bold 11pt Helvetica, Arial, sans-serif", stroke: lightText },
+            new go.Binding("text", "text"))
+        ),
+        // three named ports, one on each side except the top, all output only:
+        makePort("T", go.Spot.Top, false, true),
+        makePort("L", go.Spot.Left, true, false),
+        makePort("R", go.Spot.Right, true, false),
+        makePort("B", go.Spot.Bottom, true, false)
+      )); 
+      
+      myDiagram.nodeTemplateMap.add("template_Xform",
+      $go(go.Node, "Spot", nodeStyle(),
+        $go(go.Panel, "Auto",
+          $go(go.Shape, "Circle",
+            { minSize: new go.Size(10, 10), fill: "#33FF22", stroke: null }),
+          $go(go.TextBlock, "Xform \nTemplate",
+            { font: "bold 11pt Helvetica, Arial, sans-serif", stroke: lightText },
+            new go.Binding("text"))
+        ),
+        // three named ports, one on each side except the top, all output only:
+        makePort("T", go.Spot.Top, false, true),
+        makePort("L", go.Spot.Left, true, false),
+        makePort("R", go.Spot.Right, true, false),
+        makePort("B", go.Spot.Bottom, true, false)
+      )); 
+      
+      myDiagram.nodeTemplateMap.add("visualize",
+      $go(go.Node, "Spot", nodeStyle(),
+        $go(go.Panel, "Auto",
+          $go(go.Shape, "Rectangle",
+            { minSize: new go.Size(40, 40), fill: "#A1B2C3", stroke: null }),
+          $go(go.TextBlock, "Visualize",
+            { font: "bold 11pt Helvetica, Arial, sans-serif", stroke: lightText },
+            new go.Binding("text"))
+        ),
+        // three named ports, one on each side except the top, all output only:
+        makePort("T", go.Spot.Top, false, true),
+        makePort("L", go.Spot.Left, true, false),
+        makePort("R", go.Spot.Right, true, false),
+        makePort("B", go.Spot.Bottom, true, false)
+      )); 
+      
+    myDiagram.nodeTemplateMap.add("End",
+      $go(go.Node, "Spot", nodeStyle(),
+        $go(go.Panel, "Auto",
+          $go(go.Shape, "Circle",
+            { minSize: new go.Size(40, 40), fill: "#DC3C00", stroke: null }),
+          $go(go.TextBlock, "End",
+            { font: "bold 11pt Helvetica, Arial, sans-serif", stroke: lightText },
+            new go.Binding("text"))
+        ),
+        // three named ports, one on each side except the bottom, all input only:
+        makePort("T", go.Spot.Top, false, true),
+        makePort("L", go.Spot.Left, false, true),
+        makePort("R", go.Spot.Right, false, true)
+      ));
+    myDiagram.nodeTemplateMap.add("Comment",
+      $go(go.Node, "Auto", nodeStyle(),
+        $go(go.Shape, "File",
+          { fill: "#EFFAB4", stroke: null }),
+        $go(go.TextBlock,
+          {
+            margin: 5,
+            maxSize: new go.Size(200, NaN),
+            wrap: go.TextBlock.WrapFit,
+            textAlign: "center",
+            editable: true,
+            font: "bold 12pt Helvetica, Arial, sans-serif",
+            stroke: '#454545'
+          },
+          new go.Binding("text", "say", function(v){return "i am "+v+".";}))//.makeTwoWay())
+        // no ports, because no links are allowed to connect with a comment
+      ));
+    // replace the default Link template in the linkTemplateMap
+    myDiagram.linkTemplate =
+      $go(go.Link,  // the whole link panelinspector
+        {
+          routing: go.Link.AvoidsNodes,
+          curve: go.Link.JumpOver,
+          corner: 5, toShortLength: 4,
+          relinkableFrom: true,
+          relinkableTo: true,
+          reshapable: true,
+          resegmentable: true,
+          // mouse-overs subtly highlight links:
+          mouseEnter: function(e, link) { link.findObject("HIGHLIGHT").stroke = "rgba(30,144,255,0.2)"; },
+          mouseLeave: function(e, link) { link.findObject("HIGHLIGHT").stroke = "transparent"; }
+        },
+        new go.Binding("points").makeTwoWay(),
+        $go(go.Shape,  // the highlight shape, normally transparent
+          { isPanelMain: true, strokeWidth: 8, stroke: "transparent", name: "HIGHLIGHT" }),
+        $go(go.Shape,  // the link path shape
+          { isPanelMain: true, stroke: "gray", strokeWidth: 2 }),
+        $go(go.Shape,  // the arrowhead
+          { toArrow: "standard", stroke: null, fill: "gray"}),
+        $go(go.Panel, "Auto",  // the link label, normally not visible
+          { visible: false, name: "LABEL", segmentIndex: 2, segmentFraction: 0.5},
+          new go.Binding("visible", "visible").makeTwoWay(),
+          $go(go.Shape, "RoundedRectangle",  // the label shapemyDiagram
+            { fill: "#F8F8F8", stroke: null }),
+          $go(go.TextBlock, "Yes",  // the label
+            {
+              textAlign: "center",
+              font: "10pt helvetica, arial, sans-serif",
+              stroke: "#333333",
+              editable: true
+            },
+            new go.Binding("text", "text").makeTwoWay())
+        )
+      );
+    // Make link labels visible if coming out of a "conditional" node.
+    // This listener is called by the "LinkDrawn" and "LinkRelinked" DiagramEvents.
+    function showLinkLabel(e) {
+      var label = e.subject.findObject("LABEL");
+      if (label !== null) label.visible = (e.subject.fromNode.data.figure === "Diamond");
+    }
+    // temporary links used by LinkingTool and RelinkingTool are also orthogonal:
+    myDiagram.toolManager.linkingTool.temporaryLink.routing = go.Link.Orthogonal;
+    myDiagram.toolManager.relinkingTool.temporaryLink.routing = go.Link.Orthogonal;
+    load();  // load an initial diagram from some JSON text
+    // initialize the Palette that is on the left side of the page
+    myPalette =
+      $go(go.Palette, "myPalette",  // must name or refer to the DIV HTML element
+        {
+          "animationManager.duration": 800, // slightly longer than default (600ms) animation
+          nodeTemplateMap: myDiagram.nodeTemplateMap,  // share the templates used by myDiagram
+          model: new go.GraphLinksModel([  // specify the contents of the Palette
+            { category: "Start", text: "Start", id: "THE_START", "path": "asdf", "lbl": "" },
+            { category: "Group", text: "Group", id: "THE_Group", "path": "asdf", "lbl": ""},
+            { category: "Subject", text: "Subject", id: "THE_Subject", "path": "asdf", "lbl": ""},
+            { category: "template_Xform", id: "THE_TEMPLATE", "path": "asdf", "lbl": ""},
+            { category: "combine_Xform", id: "THE_COMB_DISP", "path": "asdf", "lbl": ""},
+            { category: "ApplyTTT_Xform", id: "THE_APPLY_TTT", "path": "asdf", "lbl": ""},
+            { category: "DTIREG_Xform", id: "THE_APPLY_DTIREG", "path": "asdf", "lbl": ""},
+            { category: "visualize", id: "VISUALIZE", "path": "asdf", "lbl": ""},
+            { category: "End", text: "End" , id: "THE_END", "path": "asdf", "lbl": ""},
+            { category: "Comment", text: "Comment", id: "THE_COMMENT", "path": "asdf", "lbl": ""},
+            { text: "???", figure: "Diamond", id: "THE_UNKNOWN", "path": "asdf", "lbl": ""},
+            /*
+            { text: "Step" },
+            */
+            
+            
+            
+
+          ])
+        });
+  }
+  // Make all ports on a node visible when the mouse is over the node
+  function showPorts(node, show) {
+    var diagram = node.diagram;
+    if (!diagram || diagram.isReadOnly || !diagram.allowLink) return;
+    node.ports.each(function(port) {
+        port.stroke = (show ? "white" : null);
+      });
+  }
+  // Show the diagram's model in JSON format that the user may edit
+  function save() {
+    document.getElementById("mySavedModel").value = myDiagram.model.toJson();
+    myDiagram.isModified = false;
+  }
+  function saveLoad() {
+    document.getElementById("mySavedModel").value = JSON.stringify($go("myDiagram"));//myDiagram.model.toJson();
+    myDiagram.isModified = true;
+  }
+  function load() {
+    myDiagram.model = go.Model.fromJson(document.getElementById("mySavedModel").value);
+    var x = JSON.parse(document.getElementById("mySavedModel").value);
+    $("#pipeline_title").html(x.name);
+    console.log(x.name);
+  }
+  
+  // add an SVG rendering of the diagram at the end of this page
+  function makeSVG() {
+    var svg = myDiagram.makeSvg({
+        scale: 0.5
+      });
+    svg.style.border = "1px solid black";
+    obj = document.getElementById("SVGArea");
+    obj.appendChild(svg);
+    if (obj.children.length > 0) {
+      obj.replaceChild(svg, obj.children[0]);
+    }    
+  }
+  
+  function otherView(opt1, opt2){
+  
+    //$("#mySavedModel").hide();
+    if(opt1 !== null)
+    {    
+      myDiagram.isModified = false;
+      var x = myDiagram.model.nodeDataArray;
+      x.push(opt1);
+      myDiagram.model.nodeDataArray = x;
+      console.log('new Data Added added');
+      myDiagram.isModified = true;      
+    }
+    else
+    {
+      myDiagram.model.nodeDataArray = [
+        {"category":"Comment", "loc":"360 -10", "text":"Kookie Brittle", "key":-13},
+        {"key":-1, "category":"Start", "loc":"175 0", "text":"Start"},
+        {"key":0, "loc":"0 77", "text":"Preheat oven to 375 F"},
+        {"key":1, "loc":"175 100", "text":"In a bowl, blend: 1 cup margarine, 1.5 teaspoon vanilla, 1 teaspoon salt"},
+        {"key":2, "loc":"175 190", "text":"Gradually beat in 1 cup sugar and 2 cups sifted flour"},
+        {"key":3, "loc":"175 270", "text":"Mix in 6 oz (1 cup) Nestle's Semi-Sweet Chocolate Morsels"},
+        {"key":4, "loc":"175 370", "text":"Press evenly into ungreased 15x10x1 pan"},
+        {"key":5, "loc":"352 85", "text":"Finely chop 1/2 cup of your choice of nuts"},
+        {"key":6, "loc":"175 440", "text":"Sprinkle nuts on top"},
+        {"key":7, "loc":"175 500", "text":"Bake for 25 minutes and let cool"},
+        {"key":8, "loc":"175 570", "text":"Cut into rectangular grid"},
+        {"key":-2, "category":"End", "loc":"175 640", "text":"Enjoy!"}
+      ];
+    }
+    if(opt2)
+    {
+      myDiagram.isModified = false;
+      var x = [];
+      x =myDiagram.model.linkDataArray;
+      x.push(opt2);
+      myDiagram.model.linkDataArray = x;
+      console.log('new Data Added');
+      myDiagram.isModified = true;
+      
+      save();
+      load();
+    }
+    
+    else
+    {
+    setTimeout(function(){
+    myDiagram.model.linkDataArray = [
+      {"from":1, "to":2, "fromPort":"B", "toPort":"T"},
+      {"from":2, "to":3, "fromPort":"B", "toPort":"T"},
+      {"from":3, "to":4, "fromPort":"B", "toPort":"T"},
+      {"from":4, "to":6, "fromPort":"B", "toPort":"T"},
+      {"from":6, "to":7, "fromPort":"B", "toPort":"T"},
+      {"from":7, "to":8, "fromPort":"B", "toPort":"T"},
+      {"from":8, "to":-2, "fromPort":"B", "toPort":"T"},
+      {"from":-1, "to":0, "fromPort":"B", "toPort":"T"},
+      {"from":-1, "to":1, "fromPort":"B", "toPort":"T"},
+      {"from":-1, "to":5, "fromPort":"B", "toPort":"T"},
+      {"from":5, "to":4, "fromPort":"B", "toPort":"T"},
+    ];    
+    }, 400);
+    
+      console.log('links added');
+    }
+  }
+  
+  
+
+  
+  
+  function addLink()
+  {
+    var x = {"from":0, "to":8, "fromPort":"B", "toPort":"T"};
+    otherView(null,x)
+    console.log('added our final link... :)');
+    //myDiagram.model.linkDataArray.push();
+    //otherView();
+
+  }
+  
+  var menu1 = [
+  {'Option 1':function(menuItem,menu) { alert("You clicked Option 1!"); } },
+  $.contextMenu.separator,
+  {'Option 2':function(menuItem,menu) { alert("You clicked Option 2!"); } }
+];
+$(function() {
+  $('#otherModel').contextMenu(menu1,{theme:'xp'});
+  
+});
+</script>
+</head>
+<body>
+
+<div class="container">
+  <div class="jumbotron">
+    <h1>tortoiseDTI</h1>
+    <p>Visually construct and analyze DTI brain atlases</p> 
+  </div>
+  <div class="row">
+    <div class="col-sm-4">
+      <h3>Construct Pipeline</h3>
+      <p>Click the button below to begin with a pre-made template</p>
+        
+    </div>
+    <div class="col-sm-4">
+      <h3>Track Progress</h3>
+      <p>Click the button below to see time remaining on current and pending tasks.</p>
+    </div>
+    <div class="col-sm-4">
+      <h3>Explore Results</h3>        
+      <p>Click the button below to visualize and process results</p>
+    </div>
+  </div>
+  <hr>
+  <div class="row">
+    <div id="button_container">
+      <div class="col-sm-4">
+        <button type="button" class="btn btn-primary btn-lg btn-block btn-outline btn-danger" id="pipeline">Start Building ...</button>
+      </div>
+      <div class="col-sm-4">
+        <button type="button" class="btn btn-primary btn-lg btn-block btn-outline btn-warning" id="progress_monitor">Time Remaining ...</button>
+      </div>
+      <div class="col-sm-4">
+        <button type="button" class="btn btn-primary btn-lg btn-block btn-outline btn-success" id="visualize_stuff">Visualize Results ...</button>
+      </div>
+
+    </div>
+  </div>
+  <hr>
+  <div class="row">
+    
+    <div class="well well-lg" id="sample_pipeline">
+        <div class="col-xs-3 col-centered" id="pipeline_title"></div><br>
+      <div style="width:100%; white-space:nowrap;">
+        <span style="display: inline-block; vertical-align: top; padding: 5px; width:10%">
+          <div id="myPalette" style="border: solid 1px gray; height: 720px"></div>
+        </span>
+
+        <span style="display: inline-block; vertical-align: top; padding: 5px; width:90%">
+          <div id="myDiagram" style="border: solid 1px gray; height: 720px"></div>
+        </span>
+      </div>
+      
+      <div id="input_content" class="form-group" >
+        <span class="btn btn-default btn-file">
+            Browseer <input type="file">
+        </span>
+        <div class="form-group" id="file1"><label>File 1 input</label><input type="file"></div>
+        <div class="form-group" id="file2"><label>File 2 input</label><input type="file"></div>
+        <div class="form-group" id="file3"><label>File output</label><input type="file"></div>
+      </div>
+      <br>
+      <div id="checkers" class="form-group">
+          <label>Checkboxes</label>
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" value="">AM
+                    </label>
+                </div>
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" value="">DEC
+                    </label>
+                </div>
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" value="">DECWL
+                    </label>
+                </div>
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" value="">DECWP
+                    </label>
+                </div>
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" value="">DT
+                    </label>
+                </div>
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" value="">EG
+                    </label>
+                </div>
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" value="">EV
+                    </label>
+                </div>
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" value="">FA
+                    </label>
+                </div>
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" value="">LI
+                    </label>
+                </div>
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" value="">MS
+                    </label>
+                </div>
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" value="">SK
+                    </label>
+                </div>
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" value="">TR
+                    </label>
+                </div>
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" value="">WL
+                    </label>
+                </div>
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" value="">WP
+                    </label>
+                </div>
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" value="">WS
+                    </label>
+                </div>
+            </div>
+      <p>
+      The Diagram Model data is loaded from the JSON below.
+      </p>
+      <button id="SaveButton" onclick="save()">Save</button>
+      <button onclick="load()">Load</button>
+      <button id="otherModel" onclick="otherView()">Other model</button>
+      <button id="addLink" onclick="addLink()">Add final link</button>
+      
+      <textarea id="mySavedModel" style="width:100%;height:300px">
+    { "class": "go.GraphLinksModel",
+      "name": "Loaded model text!",
+      "linkFromPortIdProperty": "fromPort",
+      "linkToPortIdProperty": "toPort",
+      "nodeDataArray": [ 
+    {"category":"Subject", "text":"Subject", "id":"THE_Subject", "key":-3, "loc":"-712.5033496438671 176.97095866553917", "path": "asdf", "lbl": ""},
+    {"category":"Subject", "text":"Subject", "id":"THE_Subject", "key":-2, "loc":"-592.6780195139647 190.1152113762297", "path": "asdf", "lbl": ""},
+    {"category":"Subject", "text":"Subject", "id":"THE_Subject", "key":-4, "loc":"-476.0211277607783 115.06891743428122", "path": "asdf", "lbl": ""},
+    {"category":"template_Xform", "id":"THE_TEMPLATE", "key":-5, "loc":"-592.5909551753128 -66.81692861198081", "path": "asdf", "lbl": ""},
+    {"category":"Subject", "text":"Subject", "id":"THE_Subject", "key":-6, "loc":"328.51105249969544 219.484211397911", "path": "asdf", "lbl": ""},
+    {"category":"Subject", "text":"Subject", "id":"THE_Subject", "key":-7, "loc":"468.6582545962575 190.07581256439533", "path": "asdf", "lbl": ""},
+    {"category":"Subject", "text":"Subject", "id":"THE_Subject", "key":-8, "loc":"597.4079432693048 107.47901775447349", "path": "asdf", "lbl": ""},
+    {"category":"template_Xform", "id":"THE_TEMPLATE", "key":-9, "loc":"385.42826459614014 -60.81019279521422", "path": "asdf", "lbl": ""},
+    {"category":"Group", "text":"Group", "id":"THE_Group", "key":-10, "loc":"-341.690878811477 -261.4627130659955", "path": "asdf", "lbl": ""},
+    {"category":"Group", "text":"Group", "id":"THE_Group", "key":-11, "loc":"153.04562979446098 -260.1259676644721", "path": "asdf", "lbl": ""},
+    {"category":"combine_Xform", "id":"THE_COMB_DISP", "key":-12, "loc":"-101.35812662178921 -176.54420255869059", "path": "asdf", "lbl": ""},
+    {"category":"Start", "text":"Start", "id":"THE_START", "key":-1, "loc":"-98.76142426474632 -481.16827346876255", "path": "asdf", "lbl": ""},
+    {"category":"ApplyTTT_Xform", "id":"THE_APPLY_TTT", "key":-13, "loc":"-99.85135622801727 33.80910239948213", "path": "asdf", "lbl": ""},
+    {"category":"DTIREG_Xform", "id":"THE_APPLY_DTIREG", "key":-14, "loc":"-98.37390078422834 401.695507902959", "path":"/test/path","lbl":"test"}
+     ],
+      "linkDataArray": [ 
+    {"from":-10, "to":-12, "fromPort":"R", "toPort":"T", "points":[-309.21413462543046,-261.4627130659955,-299.21413462543046,-261.4627130659955,-101.35812662178921,-261.4627130659955,-101.35812662178921,-241.25927176583141,-101.35812662178921,-221.05583046566733,-101.35812662178921,-211.05583046566733]},
+    {"from":-11, "to":-12, "fromPort":"L", "toPort":"T", "text": "TESTLABEL!", "points":[120.56888560841446,-260.1259676644721,110.56888560841446,-260.1259676644721,-101.35812662178921,-260.1259676644721,-101.35812662178921,-240.59089906506972,-101.35812662178921,-221.05583046566733,-101.35812662178921,-211.05583046566733]},
+    {"from":-10, "to":-5, "fromPort":"L", "toPort":"T", "points":[-374.1676229975235,-261.4627130659955,-384.1676229975235,-261.4627130659955,-592.5909551753127,-261.4627130659955,-592.5909551753127,-192.64563479247653,-592.5909551753127,-123.82855651895755,-592.5909551753127,-113.82855651895755]},
+    {"from":-5, "to":-3, "fromPort":"L", "toPort":"T", "points":[-639.6025830822895,-66.81692861198081,-649.6025830822895,-66.81692861198081,-712.5033496438671,-66.81692861198081,-712.5033496438671,30.568294096546623,-712.5033496438671,127.95351680507406,-712.5033496438671,137.95351680507406]},
+    {"from":-5, "to":-2, "fromPort":"B", "toPort":"T", "points":[-592.5909551753127,-19.805300705004058,-592.5909551753127,-9.805300705004058,-592.5909551753127,65.64623440538026,-592.6780195139647,65.64623440538026,-592.6780195139647,141.09776951576458,-592.6780195139647,151.09776951576458]},
+    {"from":-11, "to":-9, "fromPort":"R", "toPort":"T", "points":[185.5223739805075,-260.1259676644721,195.5223739805075,-260.1259676644721,385.4282645961401,-260.1259676644721,385.4282645961401,-188.97389418333154,385.4282645961401,-117.82182070219096,385.4282645961401,-107.82182070219096]},
+    {"from":-9, "to":-6, "fromPort":"L", "toPort":"T", "points":[338.41663668916334,-60.81019279521422,328.41663668916334,-60.81019279521422,328.41663668916334,82.3341023246042,328.5110524996954,82.3341023246042,328.5110524996954,170.46676953744583,328.5110524996954,180.46676953744583]},
+    {"from":-9, "to":-7, "fromPort":"B", "toPort":"T", "points":[385.4282645961401,-13.798564888237479,385.4282645961401,-3.798564888237479,385.4282645961401,68.62990290784637,468.65825459625745,68.62990290784637,468.65825459625745,141.05837070393022,468.65825459625745,151.05837070393022]},
+    {"from":-9, "to":-8, "fromPort":"R", "toPort":"T", "points":[432.4398925031168,-60.81019279521422,442.4398925031168,-60.81019279521422,597.4079432693048,-60.81019279521422,597.4079432693048,-1.1743084506029504,597.4079432693048,58.46157589400832,597.4079432693048,68.46157589400832]},
+    {"from":-12, "to":-13, "fromPort":"B", "toPort":"T", "points":[-101.35812662178921,-142.03257465171384,-101.35812662178921,-132.03257465171384,-101.35812662178921,-71.36755007960423,-99.85135622801727,-71.36755007960423,-99.85135622801727,-10.702525507494613,-99.85135622801727,-0.7025255074946131]},
+    {"from":-11, "to":-13, "fromPort":"B", "toPort":"T", "points":[153.04562979446098,-227.6492234784256,153.04562979446098,-217.6492234784256,153.04562979446098,-114.1758744929601,-99.85135622801727,-114.1758744929601,-99.85135622801727,-10.702525507494613,-99.85135622801727,-0.7025255074946131]},
+    {"from":-10, "to":-13, "fromPort":"B", "toPort":"T", "points":[-341.690878811477,-228.98596887994898,-341.690878811477,-218.98596887994898,-341.690878811477,-114.8442471937218,-99.85135622801727,-114.8442471937218,-99.85135622801727,-10.702525507494613,-99.85135622801727,-0.7025255074946131]},
+    {"from":-13, "to":-14, "fromPort":"B", "toPort":"T", "points":[-99.85135622801727,68.32073030645888,-99.85135622801727,78.32073030645888,-99.85135622801727,217.75230515122055,-98.37390078422834,217.75230515122055,-98.37390078422834,357.18387999598224,-98.37390078422834,367.18387999598224]},
+    {"from":-4, "to":-14, "fromPort":"R", "toPort":"T", "points":[-437.00368590031326,115.06891743428122,-427.00368590031326,115.06891743428122,-98.37390078422834,115.06891743428122,-98.37390078422834,236.12639871513173,-98.37390078422834,357.18387999598224,-98.37390078422834,367.18387999598224]},
+    {"from":-2, "to":-14, "fromPort":"R", "toPort":"T", "points":[-553.6605776534997,190.1152113762297,-543.6605776534997,190.1152113762297,-98.37390078422834,190.1152113762297,-98.37390078422834,273.64954568610597,-98.37390078422834,357.18387999598224,-98.37390078422834,367.18387999598224]},
+    {"from":-3, "to":-14, "fromPort":"B", "toPort":"T", "points":[-712.5033496438671,215.98840052600428,-712.5033496438671,225.98840052600428,-712.5033496438671,291.58614026099326,-98.37390078422834,291.58614026099326,-98.37390078422834,357.18387999598224,-98.37390078422834,367.18387999598224]},
+    {"from":-5, "to":-4, "fromPort":"R", "toPort":"T", "points":[-545.579327268336,-66.81692861198081,-535.579327268336,-66.81692861198081,-476.02112776077837,-66.81692861198081,-476.02112776077837,-0.3827265190823539,-476.02112776077837,66.0514755738161,-476.02112776077837,76.0514755738161]},
+    {"from":-1, "to":-10, "fromPort":"L", "toPort":"T", "points":[-123.97072659032773,-481.16827346876255,-133.97072659032773,-481.16827346876255,-341.690878811477,-481.16827346876255,-341.690878811477,-392.55386536040226,-341.690878811477,-303.939457252042,-341.690878811477,-293.939457252042]},
+    {"from":-1, "to":-11, "fromPort":"R", "toPort":"T", "points":[-73.55212193916493,-481.16827346876255,-63.552121939164934,-481.16827346876255,153.04562979446098,-481.16827346876255,153.04562979446098,-391.8854926596406,153.04562979446098,-302.60271185051863,153.04562979446098,-292.60271185051863]}
+     ]}
+      
+      
+      
+      </textarea>
+      <p>Click the button below to render the current GoJS Diagram into SVG at one-half scale.
+         The SVG is not interactive like the GoJS diagram, but can be used for printing or display.
+         For more information, see the page on <a href="js/papaya/Papaya-master/intro/makingSVG.html">making SVG</a>.</p>
+      <button onclick="makeSVG()">Render as SVG</button>
+      <div id="SVGArea"></div>    
+    </div>
+
+  
+  
+  <div id="sample_progress" class="well well-lg" >
+          <div id="ully">
+                    <ul>
+                        <li>
+                            <a href="#">
+                                <div>
+                                    <p>
+                                        <strong>Task 1</strong>
+                                        <span class="pull-right text-muted">40% Complete</span>
+                                    </p>
+                                    <div class="progress progress-striped active">
+                                        <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%">
+                                            <span class="sr-only">40% Complete (success)</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="#">
+                                <div>
+                                    <p>
+                                        <strong>Task 2</strong>
+                                        <span class="pull-right text-muted">20% Complete</span>
+                                    </p>
+                                    <div class="progress progress-striped active">
+                                        <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: 20%">
+                                            <span class="sr-only">20% Complete</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="#">
+                                <div>
+                                    <p>
+                                        <strong>Task 3</strong>
+                                        <span class="pull-right text-muted">60% Complete</span>
+                                    </p>
+                                    <div class="progress progress-striped active">
+                                        <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%">
+                                            <span class="sr-only">60% Complete (warning)</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="#">
+                                <div>
+                                    <p>
+                                        <strong>Task 4</strong>
+                                        <span class="pull-right text-muted">80% Complete</span>
+                                    </p>
+                                    <div class="progress progress-striped active">
+                                        <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" style="width: 80%">
+                                            <span class="sr-only">80% Complete (danger)</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a class="text-center" href="#">
+                                <strong>See All Tasks</strong>
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        </li>
+                    </ul>
+            </div>
+  </div>
+    
+  <div class="row">
+    <div id="sample_visualize" class="well well-lg" >
+            <div class="papaya" data-params="params"></div>
+    </div>
+  <div>
+      
+
+
+  
+  
+</div>
+
+</body>
+</html>

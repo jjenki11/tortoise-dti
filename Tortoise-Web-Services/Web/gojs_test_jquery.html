@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Flowchart</title>
+<!-- Copyright 1998-2015 by Northwoods Software Corporation. -->
+<meta charset="UTF-8">
+	    <script src="js/vendor/go.js"></script>
+	    <script src="js/vendor/jquery-1.11.3.min.js"></script>
+	    <script src="js/vendor/jquery-ui-1.11.4.custom/jquery-ui.js"></script>
+<script id="code">
+  function init() {
+
+    var GO = go.GraphObject.make;  // for conciseness in defining templates
+    myDiagram =
+      GO(go.Diagram, "myDiagram",  // create a Diagram for the DIV HTML element
+        {
+          "animationManager.isEnabled":false,
+          // position the graph in the middle of the diagram
+          initialContentAlignment: go.Spot.Center,
+          // allow double-click in background to create a new node
+          "clickCreatingTool.archetypeNodeData": { text: "Node", color: "white" },
+          // allow Ctrl-G to call groupSelection()
+          "commandHandler.archetypeGroupData": { text: "Group", isGroup: true, color: "blue" },
+          // enable undo & redo
+          "undoManager.isEnabled": true
+        });
+
+
+    // These nodes have text surrounded by a rounded rectangle
+    // whose fill color is bound to the node data.
+    // The user can drag a node by dragging its TextBlock label.
+    // Dragging from the Shape will start drawing a new link.
+    myDiagram.nodeTemplate =
+      GO(go.Node, "Auto",
+        { locationSpot: go.Spot.Center },
+        GO(go.Shape, "RoundedRectangle",
+          {
+            name: 'theShapeName',
+            fill: "white", // the default fill, if there is no data-binding
+            portId: "", cursor: "pointer",  // the Shape is the port, not the whole Node
+            // allow all kinds of links from and to this port
+            fromLinkable: true, fromLinkableSelfNode: true, fromLinkableDuplicates: true,
+            toLinkable: true, toLinkableSelfNode: true, toLinkableDuplicates: true
+          },
+          new go.Binding("fill", "color")),
+        GO(go.TextBlock,
+          {
+            font: "bold 14px sans-serif",
+            stroke: '#333',
+            margin: 6,  // make some extra space for the shape around the text
+            isMultiline: false,  // don't allow newlines in text
+            editable: true  // allow in-place editing by user
+          },
+          new go.Binding("text", "text").makeTwoWay())
+      );
+    // Define the appearance and behavior for Links:
+    function linkInfo(d) {  // Tooltip info for a link data object
+      return "Link:\nfrom " + d.from + " to " + d.to;
+    }
+    // The link shape and arrowhead have their stroke brush data bound to the "color" property
+    myDiagram.linkTemplate =
+      GO(go.Link,
+        { relinkableFrom: true, relinkableTo: true },  // allow the user to relink existing links
+        GO(go.Shape,
+          { strokeWidth: 2 },
+          new go.Binding("stroke", "color")),
+        GO(go.Shape,
+          { toArrow: "Standard", stroke: null },
+          new go.Binding("fill", "color"))
+      );
+    // Define the appearance and behavior for Groups:
+    function groupInfo(adornment) {  // takes the tooltip, not a group node data object
+      var g = adornment.adornedPart;  // get the Group that the tooltip adorns
+      var mems = g.memberParts.count;
+      var links = 0;
+      g.memberParts.each(function(part) {
+        if (part instanceof go.Link) links++;
+      });
+      return "Group " + g.data.key + ": " + g.data.text + "\n" + mems + " members including " + links + " links";
+    }
+    // Groups consist of a title in the color given by the group node data
+    // above a translucent gray rectangle surrounding the member parts
+    myDiagram.groupTemplate =
+      GO(go.Group, "Vertical",
+        { selectionObjectName: "PANEL",  // selection handle goes around shape, not label
+          ungroupable: true },  // enable Ctrl-Shift-G to ungroup a selected Group
+        GO(go.TextBlock,
+          {
+            font: "bold 19px sans-serif",
+            isMultiline: false,  // don't allow newlines in text
+            editable: true  // allow in-place editing by user
+          },
+          new go.Binding("text", "text").makeTwoWay(),
+          new go.Binding("stroke", "color")),
+        GO(go.Panel, "Auto",
+          { name: "PANEL" },
+          GO(go.Shape, "Rectangle",  // the rectangular shape around the members
+            { fill: "rgba(128,128,128,0.2)", stroke: "gray", strokeWidth: 3 }),
+          GO(go.Placeholder, { padding: 10 })  // represents where the members are
+        )
+      );
+
+    // Create the Diagram's Model:
+    var nodeDataArray = [
+      { key: 1, text: "Alpha", color: "lightblue" },
+      { key: 2, text: "Beta", color: "orange" },
+      { key: 3, text: "Gamma", color: "lightgreen", group: 5 },
+      { key: 4, text: "Delta", color: "pink", group: 5 },
+      { key: 5, text: "Epsilon", color: "green", isGroup: true }
+    ];
+    var linkDataArray = [
+      { from: 1, to: 2, color: "blue" },
+      { from: 2, to: 2 },
+      { from: 3, to: 4, color: "green" },
+      { from: 3, to: 1, color: "purple" }
+    ];
+    myDiagram.model = new go.GraphLinksModel(nodeDataArray, linkDataArray);
+  }
+
+
+  function makeInspector() {
+    var inspector = new Inspector('myInspector', myDiagram,
+      {
+        acceptButton: true,
+        resetButton: true,
+        /*
+        // example predicate, only show data objects:
+        inspectPredicate: function(value) {
+          return !(value instanceof go.GraphObject)
+        }
+        */
+      });
+
+
+    window.inspector = inspector;
+  }
+
+
+  window.onload = function() {
+    init();
+    makeInspector();
+    //myDiagram.maybeUpdate(); // force measure before selecting object for inspector
+
+    myDiagram.select(myDiagram.nodes.first())
+  }/*
+
+ function init() {
+    if (window.goSamples) goSamples();  // init for these samples -- you don't need to call this
+
+    // Note that we do not use $ here as an alias for go.GraphObject.make because we are using $ for jQuery
+    var GO = go.GraphObject.make;  // for conciseness in defining templates
+
+    myDiagram =
+      GO(go.Diagram, "myDiagram",  // must name or refer to the DIV HTML element
+         { allowDrop: true });  // must be true to accept drops from the Palette
+
+    // define several shared Brushes
+    var fill1 = "rgb(105,210,231)"
+    var brush1 = "rgb(65,180,181)";
+
+    var fill2 = "rgb(167,219,216)"
+    var brush2 = "rgb(127,179,176)";
+
+    var fill3 = "rgb(224,228,204)"
+    var brush3 = "rgb(184,188,164)";
+
+    var fill4 = "rgb(243,134,48)"
+    var brush4 = "rgb(203,84,08)";
+
+    myDiagram.nodeTemplateMap.add("", // default category
+      GO(go.Node, "Auto",
+        { locationSpot: go.Spot.Center },
+        new go.Binding("location", "loc", go.Point.parse).makeTwoWay(go.Point.stringify),
+        GO(go.Shape, "Ellipse",
+          { strokeWidth: 2, fill: fill1, name: "SHAPE" },
+          new go.Binding("figure", "figure"),
+          new go.Binding("fill", "fill"),
+          new go.Binding("stroke", "stroke")
+          ),
+        GO(go.TextBlock,
+          { margin: 5,
+            maxSize: new go.Size(200, NaN),
+            wrap: go.TextBlock.WrapFit,
+            textAlign: "center",
+            editable: true,
+            font: "bold 9pt Helvetica, Arial, sans-serif",
+            name: "TEXT" },
+          new go.Binding("text", "text").makeTwoWay())));
+
+
+    // initialize the Palette that is in a floating, draggable HTML container
+    myPalette = new go.Palette("myPalette");  // must name or refer to the DIV HTML element
+    myPalette.nodeTemplateMap = myDiagram.nodeTemplateMap;
+    myPalette.model = new go.GraphLinksModel([
+      { text: "Lake", fill: fill1, stroke: brush1, figure: "Hexagon" },
+      { text: "Ocean", fill: fill2, stroke: brush2, figure: "Rectangle" },
+      { text: "Sand", fill: fill3, stroke: brush3, figure: "Diamond" },
+      { text: "Goldfish", fill: fill4, stroke: brush4, figure: "Octagon" }
+    ]);
+
+    myPalette.addDiagramListener("InitialLayoutCompleted", function(diagramEvent) {
+      var pdrag = document.getElementById("paletteDraggable");
+      var palette = diagramEvent.diagram;
+      var paddingHorizontal = palette.padding.left + palette.padding.right;
+      var paddingVertical = palette.padding.top + palette.padding.bottom;
+      pdrag.style.width = palette.documentBounds.width + 20  + "px";
+      pdrag.style.height = palette.documentBounds.height + 30 + "px";
+    });
+
+
+    $(function() {
+        $("#paletteDraggable").draggable({handle: "#paletteDraggableHandle"}).resizable({
+          // After resizing, perform another layout to fit everything in the palette's viewport
+          stop: function(){ myPalette.layoutDiagram(true); }
+        });
+
+        var inspector = new Inspector('infoDraggable', myDiagram,
+          {
+            acceptButton: true,
+            resetButton: true,
+            propertyNames: {
+              "Node": ["location", "background", "scale", "angle", "isShadowed", "resizable"],
+              "#SHAPE": ["fill", "stroke", "strokeWidth", "figure"],
+              "#TEXT": ["text", "font"]
+            }
+          });
+        });
+
+  }
+  
+  */
+</script>
+</head>
+<body onload="init()">
+<div id="sample">
+
+    <div id="paletteDraggable" class="draggable" style="height: 300px;">
+      <div id="paletteDraggableHandle" class="handle">Palette</div>
+      <div id="paletteContainer">
+        <div id="myPalette"></div>
+      </div>
+    </div>
+
+    <div style="display: inline-block; vertical-align: top; padding: 5px; width:400px">
+      <div id="myDiagram" style="background-color: whitesmoke; border: solid 1px black; height: 400px"></div>
+    </div>
+
+    <div id="infoDraggable" style="display: inline-block; vertical-align: top; padding: 5px;">
+      <div id="myInfo">Selecting nodes in the main Diagram will display information here</div>
+    </div>
+
+    <p>
+      This sample contains a draggable HTML element (using jQuery UI), which houses a GoJS Palette.
+    </p>
+    <p>
+      A DIV to the right of the diagram houses a <a href="../extensions/inspector.html">GoJS GraphObject inspector</a>,
+      which displays some editable information about each Node.
+    </p>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,2 @@
+/raid1e/jeff/tester/target_atlas/final_patient1_to_atlas_sized.nii
+/raid1e/jeff/tester/target_atlas/final_patient2_to_atlas_sized.nii

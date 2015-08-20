@@ -1,0 +1,84 @@
+#!/bin/bash
+
+
+root=$1
+
+mkdir $root/working;
+mkdir $root/working/atlas0/
+
+script_dir=$PWD
+echo 'current directory is: '$PWD
+atlas_path=$root/working/atlas0/
+ami_path=/raid1e/nayaka/DTIreg_executables
+roi_target_path=/raid1e/Jeff/tester/target_atlas
+pushd $PWD
+cd $root
+
+rm affine_files.txt
+rm deffield_files.txt
+rm original_files.txt
+#rm combined_displacement*.nii
+
+affine_files=$PWD/affine_files.txt
+deffield_files=$PWD/deffield_files.txt
+original_files=$PWD/original_files.txt
+
+echo 'new dir is: '$PWD
+ls *_aff.txt > $affine_files
+ls *_deffield_MINV.nii > $deffield_files
+find_ORIGINAL="$(find . ! -name '.' ! -name '*output*' ! -name '*bined_dis*' \
+       ! -name '*_deffield*' ! -name '*_diffeo*' ! -name '*_aff*.nii' \
+       ! -name '*_rigid.nii' ! -name '*.text' ! -name '*.txt' ! -name '*target*' )"       
+nchars=${#find_ORIGINAL}
+echo "Our variable original is $nchars characters long"
+ORIGINAL=${find_ORIGINAL}
+#:2:nchars-1}       
+echo "the output is... ${ORIGINAL}"
+echo "$ORIGINAL" > "$original_files"
+
+array1=()
+array2=()
+array3=()
+
+# Read the file in parameter and fill the array named "array1"
+getArray_1() {
+    i=0
+    while read line # Read a line
+    do
+        array1[i]=$line # Put it into the array
+        i=$(($i + 1))
+    done < $1
+}
+
+# Read the file in parameter and fill the array named "array2"
+getArray_2() {
+    i=0
+    while read line # Read a line
+    do
+        array2[i]=$line # Put it into the array
+        i=$(($i + 1))
+    done < $1
+}
+# Read the file in parameter and fill the array named "array3"
+getArray_3() {
+    i=0
+    while read line # Read a line
+    do
+        array3[i]=$line # Put it into the array
+        i=$(($i + 1))
+    done < $1
+}
+# Print the file (print each element of the array)
+
+
+#$ami_path/DTIREG --fixed_tensor $roi_target_path/target_atlas_DT.nii --moving_tensor ${PWD}/average_template_diffeo_6.nii --metric DTITK  --metric  Trace -t SyN\[0.75,3,0.5\] -c 100x100x100 -f 4x2x1 -s 0.5x0.25x0 --final_reorientation FS
+
+
+    
+    echo "done with avg template registration to target atlas"
+
+getArray_1 $affine_files
+getArray_2 $deffield_files
+getArray_3 $original_files
+
+exit
