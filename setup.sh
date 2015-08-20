@@ -15,7 +15,7 @@ cd ../../Tortoise-Web-Services/Server
 
 echo "build all of our node modules"
 
-/usr/local/bin/npm install
+sudo /usr/local/bin/npm install
 
 
 echo "Should be good to go! yay.  may take a while though!"
