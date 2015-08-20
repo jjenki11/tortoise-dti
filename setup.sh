@@ -18,4 +18,4 @@ echo "build all of our node modules"
 /usr/local/bin/npm install
 
 
-echo "Should be good to go!"
+echo "Should be good to go! yay."
