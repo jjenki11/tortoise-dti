@@ -125,7 +125,8 @@ function child_ApplyTransformationToTensor(data)
 function child_CreateTemplate(data)
 {
     console.log(data);
-    create_template = childProcess.exec('cd '+data.exec_path+' && /raid1b/STBBapps/DTIREG/bin/dtireg_create_template_jeff '+ProjectName+data.path+' '+data.step+' '+data.exec_path, function(error, stdout, stderr) {
+    console.log(ProjectName+data.path);
+    create_template = childProcess.exec('cd '+ data.exec_path+' && /raid1b/STBBapps/DTIREG/bin/dtireg_create_template_jeff '+ProjectName+data.path+' '+data.step+' '+data.exec_path, function(error, stdout, stderr) {
     if(error){
      console.log(error.stack);
      console.log('Error code: '+error.code);
@@ -149,7 +150,7 @@ function child_GetXformFiles(data)
     console.log('INSIDE GETXFORMFILES '+data);
     if(data.group === 'patient')
     {
-        gxf = childProcess.exec(CoreLibsPath+'/get_xform_files.sh '+data.path+' '+data.group+' '+'1', function(error, stdout, stderr) {
+        gxf = childProcess.exec(CoreLibsPath+'/get_xform_files.sh '+ProjectName+data.path+' '+data.group+' '+ProjectName, function(error, stdout, stderr) {
         if(error){
          console.log(error.stack);
          console.log('Error code: '+error.code);
@@ -183,7 +184,7 @@ function child_RegAndCombine(data)
   // raw path ->  /stbb_home/jenkinsjc/Desktop/new_tortoiseDti/Tortoise-Web-Services/Server/Projects/dti_data/
     
     console.log('INSIDE REGANDCOMBINE '+data);
-    rag = childProcess.exec(CoreLibsPath+'/reg_and_combine.sh '+ProjectName+data.working_path+' '+ProjectName+data.label_src+' '+ProjectName+data.label_tgt+' '+ProjectName+data.base_path, function(error, stdout, stderr) {
+    rag = childProcess.exec(CoreLibsPath+'/reg_and_combine.sh '+ProjectName+data.working_path+' '+data.label_src+' '+data.label_tgt+' '+ProjectName+data.base_path+' '+CoreLibsPath, function(error, stdout, stderr) {
     if(error){
      console.log(error.stack);
      console.log('Error code: '+error.code);
@@ -257,7 +258,7 @@ io.sockets.on('connection', function(socket){
   socket.on('new_project', function(data){
     
     
-    var cre8Path = ProjectPath + '/Projects/' + data.project_name;
+    var cre8Path = ProjectPath + '/Projects/' + data.project_name + '/';
     console.log('project path = '+cre8Path);
     ProjectName  = cre8Path;
     console.log('user email   = '+data.user_email);

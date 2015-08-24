@@ -1,6 +1,7 @@
 #! /bin/bash
 
-repo_dir=/stbb_home/jenkinsjc/Desktop/Trepo/Tortoise-Core/libs
+repo_dir=$5
+#/stbb_home/jenkinsjc/Desktop/Trepo/Tortoise-Core/libs
 script_dir=/raid1b/STBBapps/DTIREG/bin
 ami_path=/raid1e/nayaka/DTIreg_executables
 other_code_path=/raid1e/raid1_restore/codes/my_codes/DTIReg

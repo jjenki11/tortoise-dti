@@ -7,7 +7,8 @@ ami_path=/raid1e/nayaka/DTIreg_executables
 
 #echo $2
 
-work_dir=/stbb_home/jenkinsjc/Desktop/new_tortoiseDti/Tortoise-Web-Services/Server/Projects/dti_data
+#work_dir=/stbb_home/jenkinsjc/Desktop/new_tortoiseDti/Tortoise-Web-Services/Server/Projects/dti_data
+work_dir=$3
 
 pushd $PWD
 cd $(dirname "$1")

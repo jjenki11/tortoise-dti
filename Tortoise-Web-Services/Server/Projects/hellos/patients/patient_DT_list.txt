@@ -1,3 +1,3 @@
-/raid3/nayaka/gerry_york/raw_cfmi/Vaughan100/Vaughan-100/PAT_100_SCAN2_proc/old_gerry_processed_1mm/PAT_100_SCAN2_N1_SAVE/PAT_100_SCAN2_N1_DT.nii
-/raid3/nayaka/gerry_york/raw_cfmi/Vaughan103/Vaughan-103/PAT_103_SCAN1_proc/old_gerry_processed_1mm/PAT_103_SCAN1_DR_N1_SAVE/PAT_103_SCAN1_DR_N1_DT.nii
-/raid3/nayaka/gerry_york/raw_cfmi/Vaughan105/Vaughan-105/PAT_105_SCAN3_proc/old_gerry_processed_1mm/PAT_105_SCAN3_DR_N1_SAVE/PAT_105_SCAN3_DR_N1_DT.nii
+/stbb_home/jenkinsjc/Desktop/new_tortoiseDti/Tortoise-Web-Services/Server/Projects/test_data_resampled/patients/PAT_100_SCAN2_N1_DT.nii
+/stbb_home/jenkinsjc/Desktop/new_tortoiseDti/Tortoise-Web-Services/Server/Projects/test_data_resampled/patients/PAT_103_SCAN1_DR_N1_DT.nii
+/stbb_home/jenkinsjc/Desktop/new_tortoiseDti/Tortoise-Web-Services/Server/Projects/test_data_resampled/patients/PAT_105_SCAN3_DR_N1_DT.nii
