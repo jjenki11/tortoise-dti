@@ -97,6 +97,7 @@
     <script language="javascript" type="text/javascript" src="js/FAQpage.js"></script>
     <script language="javascript" type="text/javascript" src="js/NavBar.js"></script>
     <script language="javascript" type="text/javascript" src="js/EmbeddedForum.js"></script>
+    <script language="javascript" type="text/javascript" src="js/ProjectSetup.js"></script>
 
     <style>
         body {
@@ -173,7 +174,15 @@
         display: block;
     }
     
-
+    .smallViewer {
+        margin:20px;width:500px;height:415px;
+    }
+    .left {
+        float: left;
+    }
+    .right {
+        float: right;
+    }
 
     .col-sm-4:not(:last-child) {
         border-right: 1px solid #ccc;
@@ -189,6 +198,10 @@
 
 <script type="text/javascript">
 
+
+    var params1 = [];
+    var params2 = [];
+    
     var file_struct = {
     
         controls: {
@@ -213,6 +226,8 @@
 	    mri.init();	
     
     var em_forum;
+    
+    var project_setup;
 
   $(document).ready(function(){
     init();
@@ -226,6 +241,9 @@
       $("#contorlOpts").hide();
       ui = new UIManager();
       em_forum = new EmbeddedForum();
+      console.log('setting up project modal');
+      project_setup = new ProjectSetup(sock);
+    project_setup.modalContent("#project_setup_modal");
       //ui.derivedValuesForm();
 
       
@@ -906,6 +924,7 @@
 ];
 $(function() {
   $('#otherModel').contextMenu(menu1,{theme:'xp'});
+  
   ui.derivedValuesForm();
   ui.controlGroupInput('Control');
   ui.patientGroupInput('Patient');
@@ -918,6 +937,8 @@ $(function() {
     $("#theNavBar").html(nav.content());
     //$("#main_container").hide();
     $("#rowz").hide();
+    
+    
 });
 </script>
 </head>
@@ -1146,11 +1167,40 @@ $(function() {
     </div>    
     <div class="row">
         <div id="sample_visualize" class="well well-lg" >
+          <iframe src="../Web/js/papaya/Papaya-master/build/index.html"  width="100%" height="700px" scrolling="yes" frameborder="0"></iframe>
+          
+        <!--          
+          		<div class="smallViewer">
+		            <div class="papaya" data-params="params1" id="p1"></div>
+		          </div>
+		           
+		          <div class="smallViewer">
+            		<div class="papaya" data-params="params2" id="p2"></div>
+              </div>
+         
+          /Web/js/papaya/Papaya-master/build 
                 <div class="papaya" data-params="params"></div>
                 <span class="btn btn-default" id="show_derived_values">Show Selected Derived Values</span>
+          -->
         </div>
-    <div>
-          
+<span class="btn btn-default" id="show_derived_values">Show Selected Derived Values</span>
+    
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            Projects
+        </div>
+        <!-- /.panel-heading -->
+        <div class="panel-body">
+            <!-- Button trigger modal -->
+            <button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
+                Set up new project
+            </button>
+            <div id="project_setup_modal"></div>            
+        </div>
+        <!-- .panel-body -->
+    </div>
+    <!-- /.panel -->
+      
     <div class="row" id="atlasOpts">
         <label>Atlas Options</label><hr>
         <span class="btn btn-default btn-file">Load Atlas List File <input type="file" id="atlasFile" onchange="$('#upload-atlas-file-info').html($(this).val());"></span>

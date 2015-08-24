@@ -6,12 +6,15 @@ var sys = require('sys');
 var fs = require('fs');
 var http = require('http');
 
+var project = require('./ProjectProxy.js').ProjectProxy;
+
 var module = require('module');
 
  var childProcess = require('child_process'),
      ls,
      rf,
      ct,
+     cp,
      create_template,
      gxf,
      rag,
@@ -22,6 +25,10 @@ var module = require('module');
     var patient_subjects = [];
     var control_subjects = [];
     var atlas_subjects = [];
+    
+    var CoreLibsPath = project.getCoreDirName();
+    
+    var ProjectPath  = project.getDirName(); // Server/Projects
 
 function child_ls(dir)
 {
@@ -82,7 +89,7 @@ function child_readFile(file, category)
 
 function child_CombineTransformations(data)
 {
-  ct = childProcess.exec('../../Tortoise-Core/libs/combine_xform_helper.sh '+data.src+' '+data.tgt+' '+data.out, function (error, stdout, stderr) {
+  ct = childProcess.exec(CoreLibsPath+'/combine_xform_helper.sh '+data.src+' '+data.tgt+' '+data.out, function (error, stdout, stderr) {
    if (error) {
      console.log(error.stack);
      console.log('Error code: '+error.code);
@@ -99,7 +106,7 @@ function child_CombineTransformations(data)
 
 function child_ApplyTransformationToTensor(data)
 {
-   attt = childProcess.exec('../../Tortoise-Core/libs/apply_trans_to_tens_helper.sh '+data.orig+' '+data.disp+' '+data.out, function (error, stdout, stderr) {
+   attt = childProcess.exec(CoreLibsPath+'/apply_trans_to_tens_helper.sh '+data.orig+' '+data.disp+' '+data.out, function (error, stdout, stderr) {
    if (error) {
      console.log(error.stack);
      console.log('Error code: '+error.code);
@@ -141,7 +148,7 @@ function child_GetXformFiles(data)
     console.log('INSIDE GETXFORMFILES '+data);
     if(data.group === 'patient')
     {
-        gxf = childProcess.exec('/stbb_home/jenkinsjc/Desktop/new_tortoiseDti/Tortoise-Core/libs/get_xform_files.sh '+data.path+' '+data.group+' '+'1', function(error, stdout, stderr) {
+        gxf = childProcess.exec(CoreLibsPath+'/get_xform_files.sh '+data.path+' '+data.group+' '+'1', function(error, stdout, stderr) {
         if(error){
          console.log(error.stack);
          console.log('Error code: '+error.code);
@@ -153,7 +160,7 @@ function child_GetXformFiles(data)
     }
     else
     {
-        gxf = childProcess.exec('/stbb_home/jenkinsjc/Desktop/new_tortoiseDti/Tortoise-Core/libs/get_xform_files.sh '+data.path+' '+data.group, function(error, stdout, stderr) {
+        gxf = childProcess.exec(CoreLibsPath+'/get_xform_files.sh '+data.path+' '+data.group, function(error, stdout, stderr) {
         if(error){
          console.log(error.stack);
          console.log('Error code: '+error.code);
@@ -171,8 +178,11 @@ function child_GetXformFiles(data)
 
 function child_RegAndCombine(data)
 {
+
+  // raw path ->  /stbb_home/jenkinsjc/Desktop/new_tortoiseDti/Tortoise-Web-Services/Server/Projects/dti_data/
+    
     console.log('INSIDE REGANDCOMBINE '+data);
-    rag = childProcess.exec('/stbb_home/jenkinsjc/Desktop/new_tortoiseDti/Tortoise-Core/libs/reg_and_combine.sh '+data.working_path+' '+data.label_src+' '+data.label_tgt+' '+data.base_path, function(error, stdout, stderr) {
+    rag = childProcess.exec(CoreLibsPath+'/reg_and_combine.sh '+data.working_path+' '+data.label_src+' '+data.label_tgt+' '+data.base_path, function(error, stdout, stderr) {
     if(error){
      console.log(error.stack);
      console.log('Error code: '+error.code);
@@ -188,6 +198,24 @@ function child_RegAndCombine(data)
 };
 
 
+function child_createProject(data)
+{
+    console.log('INSIDE createProject '+data);
+    cp = childProcess.exec('./create_project.sh '+data.project_name, function(error, stdout, stderr) {
+    if(error){
+     console.log(error.stack);
+     console.log('Error code: '+error.code);
+     console.log('Signal received: '+error.signal);
+   }
+   console.log('Child Process STDOUT: '+stdout);
+   console.log('Child Process STDERR: '+stderr);
+ });
+  cp.on('exit', function (code) {
+   console.log('Child process create template exited with exit code '+code);
+ });
+
+};
+
 
 
 
@@ -201,6 +229,10 @@ io.sockets.on('connection', function(socket){
   console.log('connection started');
   socket.emit('success', 'Server heard your request.');
   
+
+  
+  console.log("CORE LIBS PATH = ",project.getCoreDirName());
+  
   socket.on('disconnect', function(){
     console.log('finishing watch');
     console.log(watch);
@@ -209,6 +241,7 @@ io.sockets.on('connection', function(socket){
         watch.kill();
     }
   });
+  
   
   socket.on('plumbjs', function(data){
     console.log("We ask you... so you want to plumb?");
@@ -220,12 +253,22 @@ io.sockets.on('connection', function(socket){
     console.log(data.txt+" IN MY ATLAS");
   });
   
+  socket.on('new_project', function(data){
+    
+    
+    var cre8Path = ProjectPath + '/' + data.project_name;
+    console.log('project path = '+cre8Path);
+    
+    console.log('user email   = '+data.user_email);
+    child_createProject(data);
+  });
+  /*
   socket.on('get_file', function(data){
     console.log("YOU WANT THE FILE ==>> "+data.txt);
    //child_ls("/home/jeff/Desktop/development/NIH/new_tortoise/Tortoise-Web-Services/Web/img");
     child_readFile("/stbb_home/jenkinsjc/Desktop/new_tortoiseDti/Tortoise-Web-Services/Web/README.txt");
   });
-  
+  */
   socket.on('combine_xform', function(data){  
     child_CombineTransformations(data);  
   });
