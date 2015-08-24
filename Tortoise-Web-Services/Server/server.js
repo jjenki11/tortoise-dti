@@ -15,6 +15,7 @@ var module = require('module');
      rf,
      ct,
      cp,
+     rb,
      create_template,
      gxf,
      rag,
@@ -146,6 +147,25 @@ function child_CreateTemplate(data)
    console.log('Child process create template exited with exit code '+code);
  });
      
+};
+
+function child_ROIBusiness(data)
+{
+
+   rb = childProcess.exec(CoreLibsPath+'/combine_xform_helper.sh '+ProjectName+data.src+' '+ProjectName+data.tgt+' '+ProjectName+data.out, function (error, stdout, stderr) {
+   if (error) {
+     console.log(error.stack);
+     console.log('Error code: '+error.code);
+     console.log('Signal received: '+error.signal);
+   }
+   console.log('Child Process STDOUT: '+stdout);
+   console.log('Child Process STDERR: '+stderr);
+ });
+
+ rb.on('exit', function (code) {
+   console.log('Child process exited with exit code '+code);
+ });
+
 };
 
 function child_GetXformFiles(data)

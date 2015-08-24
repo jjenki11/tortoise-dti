@@ -14,6 +14,8 @@ repo_dir=$4
 pushd $PWD
 cd $(dirname "$1")
 
+chmod 777 *
+
 group_name=$2
 
 rm affine_files.txt
