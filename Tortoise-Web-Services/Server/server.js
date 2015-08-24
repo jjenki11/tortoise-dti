@@ -29,6 +29,7 @@ var module = require('module');
     var CoreLibsPath = project.getCoreDirName();
     
     var ProjectPath  = project.getDirName(); // Server/Projects
+    var ProjectName;//  = project.getProjectName();
 
 function child_ls(dir)
 {
@@ -50,7 +51,7 @@ var current_category = null;
 
 function child_readFile(file, category)
 {
-  rf = childProcess.exec('cat '+file, function (error, stdout, stderr) {
+  rf = childProcess.exec('cat '+ProjectName+'/'+file, function (error, stdout, stderr) {
    if (error) {
      console.log(error.stack);
      console.log('Error code: '+error.code);
@@ -89,7 +90,7 @@ function child_readFile(file, category)
 
 function child_CombineTransformations(data)
 {
-  ct = childProcess.exec(CoreLibsPath+'/combine_xform_helper.sh '+data.src+' '+data.tgt+' '+data.out, function (error, stdout, stderr) {
+  ct = childProcess.exec(CoreLibsPath+'/combine_xform_helper.sh '+ProjectName+data.src+' '+ProjectName+data.tgt+' '+ProjectName+data.out, function (error, stdout, stderr) {
    if (error) {
      console.log(error.stack);
      console.log('Error code: '+error.code);
@@ -124,7 +125,7 @@ function child_ApplyTransformationToTensor(data)
 function child_CreateTemplate(data)
 {
     console.log(data);
-    create_template = childProcess.exec('cd '+data.exec_path+' && /raid1b/STBBapps/DTIREG/bin/dtireg_create_template_jeff '+data.path+' '+data.step+' '+data.exec_path, function(error, stdout, stderr) {
+    create_template = childProcess.exec('cd '+data.exec_path+' && /raid1b/STBBapps/DTIREG/bin/dtireg_create_template_jeff '+ProjectName+data.path+' '+data.step+' '+data.exec_path, function(error, stdout, stderr) {
     if(error){
      console.log(error.stack);
      console.log('Error code: '+error.code);
@@ -182,7 +183,7 @@ function child_RegAndCombine(data)
   // raw path ->  /stbb_home/jenkinsjc/Desktop/new_tortoiseDti/Tortoise-Web-Services/Server/Projects/dti_data/
     
     console.log('INSIDE REGANDCOMBINE '+data);
-    rag = childProcess.exec(CoreLibsPath+'/reg_and_combine.sh '+data.working_path+' '+data.label_src+' '+data.label_tgt+' '+data.base_path, function(error, stdout, stderr) {
+    rag = childProcess.exec(CoreLibsPath+'/reg_and_combine.sh '+ProjectName+data.working_path+' '+ProjectName+data.label_src+' '+ProjectName+data.label_tgt+' '+ProjectName+data.base_path, function(error, stdout, stderr) {
     if(error){
      console.log(error.stack);
      console.log('Error code: '+error.code);
@@ -256,9 +257,9 @@ io.sockets.on('connection', function(socket){
   socket.on('new_project', function(data){
     
     
-    var cre8Path = ProjectPath + '/' + data.project_name;
+    var cre8Path = ProjectPath + '/Projects/' + data.project_name;
     console.log('project path = '+cre8Path);
-    
+    ProjectName  = cre8Path;
     console.log('user email   = '+data.user_email);
     child_createProject(data);
   });

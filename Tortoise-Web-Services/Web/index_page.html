@@ -205,15 +205,15 @@
     var file_struct = {
     
         controls: {
-            path: "/stbb_home/jenkinsjc/Desktop/new_tortoiseDti/Tortoise-Web-Services/Server/Projects/dti_data/controls",
+            path: "controls",
             list_file: ""  
         },
         patients: {
-            path: "/stbb_home/jenkinsjc/Desktop/new_tortoiseDti/Tortoise-Web-Services/Server/Projects/dti_data/patients",
+            path: "patients",
             list_file: ""  
         },
         atlas: {
-            path: "/stbb_home/jenkinsjc/Desktop/new_tortoiseDti/Tortoise-Web-Services/Server/Projects/dti_data/atlas",
+            path: "atlas",
             list_file: ""  
         },
     };
@@ -256,14 +256,14 @@
             {
                 case 'control' :
                     file_struct.controls.list_file = label;
-                    sock.send('read_list_file', {path: "/stbb_home/jenkinsjc/Desktop/new_tortoiseDti/Tortoise-Web-Services/Server/Projects/dti_data/controls/"+label, cat: 'control'});
+                    sock.send('read_list_file', {path: "controls/"+label, cat: 'control'});
                     break;
                 case 'patient' :
                     file_struct.patients.list_file = label;
-                    sock.send('read_list_file', {path: "/stbb_home/jenkinsjc/Desktop/new_tortoiseDti/Tortoise-Web-Services/Server/Projects/dti_data/patients/"+label, cat: 'patient'});
+                    sock.send('read_list_file', {path: "patients/"+label, cat: 'patient'});
                     break;
                 case 'atlas'   :
-                    sock.send('read_list_file', {path: "/stbb_home/jenkinsjc/Desktop/new_tortoiseDti/Tortoise-Web-Services/Server/Projects/dti_data/atlas/"+label, cat: 'atlas'});
+                    sock.send('read_list_file', {path: "atlas/"+label, cat: 'atlas'});
                     break;
                 default        :
                     console.log('unhandled exception!?');
@@ -273,7 +273,7 @@
         
         $("#control_exec").on('click', function(event, ui) {
             sock.send('create_template', {
-                path: "/stbb_home/jenkinsjc/Desktop/new_tortoiseDti/Tortoise-Web-Services/Server/Projects/dti_data/controls/"+file_struct.controls.list_file,
+                path: "controls/"+file_struct.controls.list_file,
                 step: "0", 
                 exec_path: "/raid1b/STBBapps/DTIREG/bin/",
                 group: 'control'
@@ -282,7 +282,7 @@
         
         $("#patient_exec").on('click', function(event, ui) {
             sock.send('create_template', {
-                path: "/stbb_home/jenkinsjc/Desktop/new_tortoiseDti/Tortoise-Web-Services/Server/Projects/dti_data/patients/"+file_struct.patients.list_file,
+                path: "patients/"+file_struct.patients.list_file,
                 step: "0", 
                 exec_path: "/raid1b/STBBapps/DTIREG/bin/",
                 group: 'patient'
@@ -291,19 +291,19 @@
         
         $("#complete_exec").on('click', function(event, ui) {
             sock.send('reg_and_combine', {
-                working_path: '/stbb_home/jenkinsjc/Desktop/new_tortoiseDti/Tortoise-Web-Services/Server/Projects/dti_data/working',
+                working_path: 'working',
                 label_src: 'patient',
                 label_tgt: 'control',
-                base_path: '/stbb_home/jenkinsjc/Desktop/new_tortoiseDti/Tortoise-Web-Services/Server/Projects/dti_data'
+                base_path: 'dti_data'
             });
         });
         
         $("#target_exec").on('click', function(event, ui) {
             sock.send('reg_and_combine', {
-                working_path: '/stbb_home/jenkinsjc/Desktop/new_tortoiseDti/Tortoise-Web-Services/Server/Projects/dti_data/working_atlas',
+                working_path: 'working_atlas',
                 label_src: 'atlas',
                 label_tgt: 'control',
-                base_path: '/stbb_home/jenkinsjc/Desktop/new_tortoiseDti/Tortoise-Web-Services/Server/Projects/dti_data'
+                base_path: ''
             });
         });
         
@@ -931,7 +931,7 @@ $(function() {
   ui.atlasInput('Atlas');
         var params = [];
         params["worldSpace"] = true;
-        params["images"] = ["/stbb_home/jenkinsjc/Desktop/new_tortoiseDti/Tortoise-Web-Services/Web/js/papaya/Papaya-master/data/sample_image.nii.gz"];
+        params["images"] = ["../js/papaya/Papaya-master/data/sample_image.nii.gz"];
         params["expandable"] = true;
     var nav = new NavBar();
     $("#theNavBar").html(nav.content());
