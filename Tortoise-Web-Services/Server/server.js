@@ -127,7 +127,9 @@ function child_CreateTemplate(data)
     console.log('Creating Template...');
     console.log(data);
     console.log(ProjectName+data.path);
-    create_template = childProcess.exec('cd '+ data.exec_path+' && /raid1b/STBBapps/DTIREG/bin/dtireg_create_template_jeff '+ProjectName+data.path+' '+data.step+' '+data.exec_path, function(error, stdout, stderr) {
+    // the 'y' is for yes!
+    //  this fixes image mismatch due to mipav dropping a slice
+    create_template = childProcess.exec('cd '+ data.exec_path+' && /raid1b/STBBapps/DTIREG/bin/dtireg_create_template_jeff '+ProjectName+data.path+' '+data.step+' '+data.exec_path+' < '+ProjectName+"/answer_yes.txt", function(error, stdout, stderr) {
     if(error){
      console.log(error.stack);
      console.log('Error code: '+error.code);
