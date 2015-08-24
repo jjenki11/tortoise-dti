@@ -1,7 +1,7 @@
 #! /bin/bash
 
 
-repo_dir=/stbb_home/jenkinsjc/Desktop/new_tortoiseDti/Tortoise-Core/libs
+#repo_dir=/stbb_home/jenkinsjc/Desktop/new_tortoiseDti/Tortoise-Core/libs
 script_dir=/raid1b/STBBapps/DTIREG/bin
 ami_path=/raid1e/nayaka/DTIreg_executables
 
@@ -9,6 +9,7 @@ ami_path=/raid1e/nayaka/DTIreg_executables
 
 #work_dir=/stbb_home/jenkinsjc/Desktop/new_tortoiseDti/Tortoise-Web-Services/Server/Projects/dti_data
 work_dir=$3
+repo_dir=$4
 
 pushd $PWD
 cd $(dirname "$1")

@@ -124,6 +124,7 @@ function child_ApplyTransformationToTensor(data)
 
 function child_CreateTemplate(data)
 {
+    console.log('Creating Template...');
     console.log(data);
     console.log(ProjectName+data.path);
     create_template = childProcess.exec('cd '+ data.exec_path+' && /raid1b/STBBapps/DTIREG/bin/dtireg_create_template_jeff '+ProjectName+data.path+' '+data.step+' '+data.exec_path, function(error, stdout, stderr) {
@@ -150,7 +151,7 @@ function child_GetXformFiles(data)
     console.log('INSIDE GETXFORMFILES '+data);
     if(data.group === 'patient')
     {
-        gxf = childProcess.exec(CoreLibsPath+'/get_xform_files.sh '+ProjectName+data.path+' '+data.group+' '+ProjectName, function(error, stdout, stderr) {
+        gxf = childProcess.exec(CoreLibsPath+'/get_xform_files.sh '+ProjectName+data.path+' '+data.group+' '+ProjectName+' '+CoreLibsPath, function(error, stdout, stderr) {
         if(error){
          console.log(error.stack);
          console.log('Error code: '+error.code);
@@ -162,7 +163,7 @@ function child_GetXformFiles(data)
     }
     else
     {
-        gxf = childProcess.exec(CoreLibsPath+'/get_xform_files.sh '+data.path+' '+data.group, function(error, stdout, stderr) {
+        gxf = childProcess.exec(CoreLibsPath+'/get_xform_files.sh '+ProjectName+data.path+' '+data.group+' '+ProjectName+' '+CoreLibsPath, function(error, stdout, stderr) {
         if(error){
          console.log(error.stack);
          console.log('Error code: '+error.code);
