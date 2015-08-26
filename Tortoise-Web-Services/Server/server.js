@@ -151,8 +151,7 @@ function child_CreateTemplate(data)
 
 function child_ROIBusiness(data)
 {
-
-   rb = childProcess.exec(CoreLibsPath+'/combine_xform_helper.sh '+ProjectName+data.src+' '+ProjectName+data.tgt+' '+ProjectName+data.out, function (error, stdout, stderr) {
+   rb = childProcess.exec(CoreLibsPath+'/roi_business.sh '+data.derived_values + ' '+ProjectName+'working_atlas/roi_list.txt '+ ProjectName+'working_atlas/roi_business_out patients '+ProjectName+'working/', function (error, stdout, stderr) {
    if (error) {
      console.log(error.stack);
      console.log('Error code: '+error.code);
@@ -398,6 +397,11 @@ io.sockets.on('connection', function(socket){
             
     }   
 //    socket.emit('populate_the_list', subjects);
+  });
+  
+  socket.on('roi_business', function(data){
+    console.log('roi business commencing');
+    child_ROIBusiness(data);
   });
   
 });

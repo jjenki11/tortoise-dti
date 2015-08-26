@@ -224,7 +224,7 @@
     var ui;
     var mri = new PapayaHelper(ui);
 	    mri.init();	
-    
+    var sg = new SceneGraph();
     var em_forum;
     
     var project_setup;
@@ -382,6 +382,7 @@
             );
             
             console.log('You have chosen -> '+selected_vals.join(", "));
+            sock.send('roi_business', {derived_values: selected_vals.join(",")});
             /*
             var XparamsX;
             for(var i in selected_vals)
@@ -391,6 +392,17 @@
             */
             
         }); 
+        
+        $("#get_graph_props").on('click', function(event, ui) {
+            console.log(myDiagram.model.toJson());
+            //sg.init(myDiagram.model);
+            sg.JSONToSceneGraph(myDiagram.model);
+            sg.printGraph();
+            
+            var x = sg.SceneGraphToJSON();
+            console.log('YAYYYY');
+            console.log(x);
+        });
         
         $('#control_grps').on('click', function(event, ui) {            
             sock.send('populate_list', {});
@@ -701,7 +713,7 @@
           $go(go.Shape, "Circle",
             { minSize: new go.Size(40, 40), fill: "#ABCDBC", stroke: null }),
           $go(go.TextBlock, "Group",
-            { font: "bold 11pt Helvetica, Arial, sans-serif", stroke: lightText },
+            { font: "bold 11pt Helvetica, Arial, sans-serif", stroke: lightText, editable: true },
             new go.Binding("text"))
         ),
         // three named ports, one on each side except the top, all output only:
@@ -1069,7 +1081,7 @@ $(function() {
   "nodeDataArray": [ 
 {"category":"Group", "text":"Patient Group", "id":"Patient_Group", "path":"asdf", "lbl":"", "key":-3, "loc":"-363.5 -428.6999969482422"},
 {"category":"Group", "text":"Control Group", "id":"Control_Group", "path":"asdf", "lbl":"", "key":-2, "loc":"-363.5 -254.6999969482422"},
-{"category":"Atlas", "id":"Atlas", "name": "Target Atlas", "path":"asdf", "lbl":"", "key":-4, "loc":"-363.5 -53.69999694824219"}
+{"category":"Atlas", "text":"Target Atlas", "id":"Atlas", "name": "Target Atlas", "path":"asdf", "lbl":"", "key":-4, "loc":"-363.5 -53.69999694824219"}
  ],
   "linkDataArray": [ 
 {"from":-3, "to":-2, "fromPort":"B", "toPort":"T", "points":[-363.5,-396.22325276219567,-363.5,-386.22325276219567,-363.5,-341.6999969482422,-363.5,-341.6999969482422,-363.5,-297.1767411342887,-363.5,-287.1767411342887]},
@@ -1184,6 +1196,7 @@ $(function() {
           -->
         </div>
 <span class="btn btn-default" id="show_derived_values">Show Selected Derived Values</span>
+<span class="btn btn-default" id="get_graph_props">Get Graph Properties</span>
     
     <div class="panel panel-default">
         <div class="panel-heading">
