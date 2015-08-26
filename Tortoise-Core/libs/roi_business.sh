@@ -35,9 +35,11 @@ do
     echo 'rfn = '${rfn}
     echo 'ofn = '${ofn}
     echo 'group='${group}
-    idl -e "extract_roi_values_and_save_jeff,'${lfn}','${tfn}','${rfn}','${ofn}_${x}.csv','${group}'"
-    echo 'done with roi business for derived value: '${x}
-    
+    idl -e "extract_roi_values_and_save_jeff,'${lfn}','${tfn}','${rfn}','${ofn}_${x}.csv','${group}','${x}'"
+    #idl -e "extract_roi_values_and_save_jeff,'${lfn}','${tfn}','${rfn}','${ofn}.csv','${group}','${x}'"
+    echo 'done with roi business for derived value: '${x}    
+    cat ${ofn}_${x}.csv >> ${ofn}.csv
+    rm ${ofn}_${x}.csv
 done
 
 
