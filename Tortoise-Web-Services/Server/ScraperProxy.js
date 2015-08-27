@@ -21,11 +21,7 @@ var ScraperProxy =
     },
     
     ScrapeDirForFiles : function(data, sock, basepath, corepath)
-    {
-        console.log('The dir you are choosing: ',data.dir);
-        console.log('The files you are choosing: ', data.fileArray);
-       console.log(basepath+data.dir+'/'+data.fileArray[0]);
-        
+    {  
       for(var i = 0; i < data.fileArray.length; i++)
       {
            child_scraper = childProcess.exec(corepath+'/watch_dir_contents.sh '+basepath+data.dir+'/'+data.fileArray[i], function (error, stdout, stderr) {
