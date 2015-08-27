@@ -91,15 +91,18 @@
         ];
         /* DO NOT EDIT (end) */
 
-        var params = [];
-        params["images"] = ["../data/sample_image.nii.gz"];
-        params["atlas"] = ["Talairach_labels_1mm"];
+        var params1 = [];
+        params1["images"] = ["../data/sample_image.nii.gz"];
+        params1["atlas"] = ["Talairach_labels_1mm"];
+        document.getElementById('pap2').visible = false;//$("#pap2").hide();
     </script>
 
     <title>URL Load</title>
 </head>
 
 <body>
-<div class="papaya" data-params="params"></div>
+ANOTHER PAPAYA!!?!
+<div class="papaya x1" data-params="params1" id="pap1"></div>
+
 </body>
 </html>

@@ -82,6 +82,19 @@ var nodeConnection = function()
     plugins.updatePlotWindow(data);
 	});
 	
+	socket.on('progress_update', function(data){
+	  //$("#TASK_1_PROGRESS").css('aria-valuenow', (data.percent_done));
+	  $('.TASK_1_PROGRESS').css('width', data.percent_done+'%').attr('aria-valuenow', data.percent_done);
+    $('#TASK_1_PROGRESS').css('width', data.percent_done+'%').attr('aria-valuenow', data.percent_done);
+	  
+	  //$("TASK_1_PROGRESS").html(outer);
+	  console.log('percent done = ',data.percent_done);
+	  console.log('name         = ',data.name);
+	/*
+	  sock.emit('progress_update', {percent_done: 0, name: 'test'});
+	*/
+	});
+	
 	socket.on('file_contents', function(data){
     
         console.log("YOUR FILE CONTENTS ARE....\n");

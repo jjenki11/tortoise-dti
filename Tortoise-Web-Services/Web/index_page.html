@@ -80,7 +80,6 @@
     <script language="javascript" type="text/javascript" src="http://localhost:8444/socket.io/socket.io.js"></script>
     <script language="javascript" type="text/javascript" src="js/nodeconnection.js"></script>
 
-
     <!-- Bootstrap Core CSS -->
     <link href="js/vendor/bootstrap-admin/startbootstrap-sb-admin-2-1.0.7/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
 
@@ -97,15 +96,23 @@
     <script language="javascript" type="text/javascript" src="js/FAQpage.js"></script>
     <script language="javascript" type="text/javascript" src="js/NavBar.js"></script>
     <script language="javascript" type="text/javascript" src="js/EmbeddedForum.js"></script>
-    <script language="javascript" type="text/javascript" src="js/ProjectSetup.js"></script>
-
+    <script language="javascript" type="text/javascript" src="js/ProjectSetup.js"></script>    
+		<script src="js/vendor/chartjs/Chart.js"></script>
+    <script src="js/ChartHelper.js"></script>
+    <script src="js/GoJsHelper.js"></script>
     <style>
         body {
             width:1000px;
             margin:0 auto;
             background:white;
         }
-        .jumbotron{width:100%;margin-left:10%;max-width: 1200px;margin-left:auto; margin-right:auto;}
+        .jumbotron{
+            width:100%;
+            margin-left:10%;
+            max-width: 1200px;
+            margin-left:auto; 
+            margin-right:auto;
+        }
         .loremisum {
             font-size:14pt;
             margin:20px;
@@ -198,9 +205,13 @@
 
 <script type="text/javascript">
 
-
+    var myDiagram;
+    
+    var ChartPointer;
+    
     var params1 = [];
     var params2 = [];
+    
     
     var file_struct = {
     
@@ -222,35 +233,45 @@
       sock.init();
     
     var ui;
-    var mri = new PapayaHelper(ui);
-	    mri.init();	
+    var mri;
     var sg = new SceneGraph();
+    var gojs_helper = new GoJsHelper();
+    var chart_helper = new ChartHelper();
+        
+        //myDiagram = gojs_helper.getDiagram();
+        gojs_helper.getDiagram()
     var em_forum;
     
     var project_setup;
 
   $(document).ready(function(){
-    init();
-      //$("#input_content").hide();
-      //$("#checkers").hide();
       
-      $("#sample_visualize").show();
-      $("#loadableModel").hide();
-      $("#atlasOpts").hide();
-      $("#patientOpts").hide();
-      $("#contorlOpts").hide();
-      ui = new UIManager();
-      em_forum = new EmbeddedForum();
-      console.log('setting up project modal');
-      project_setup = new ProjectSetup(sock);
-    project_setup.modalContent("#project_setup_modal");
-      //ui.derivedValuesForm();
-
+        gojs_helper.init("myDiagram");
+        gojs_helper.load();
+        
+        //$("#input_content").hide();
+        //$("#checkers").hide();
+        
+        //$("#sample_visualize").show();
+        $("#loadableModel").hide();
+        $("#atlasOpts").hide();
+        $("#patientOpts").hide();
+        $("#contorlOpts").hide();
+        $("#sample_visualize").hide();
+        
+        ui = new UIManager();
+        mri = new PapayaHelper(ui);
+	      mri.init();	
+	      
+        em_forum = new EmbeddedForum();
+        console.log('setting up project modal');
+        project_setup = new ProjectSetup(sock);
+        project_setup.modalContent("#project_setup_modal");
+        //ui.derivedValuesForm();
       
-      $('.btn-file :file').on('fileselect', function(event, numFiles, label) {
+        $('.btn-file :file').on('fileselect', function(event, numFiles, label) {
             console.log(numFiles);
             console.log(label);
-            //sock.send('read_list_file', {path: "/stbb_home/jenkinsjc/Desktop/new_tortoiseDti/Tortoise-Web-Services/Web/README.txt"});
             console.log('CURRENT NODE = ' + sock.getNodeLabel());
             switch(sock.getNodeLabel())
             {
@@ -268,9 +289,7 @@
                 default        :
                     console.log('unhandled exception!?');
             }
-            //sock.send('read_list_file', {path: "/stbb_home/jenkinsjc/Desktop/new_tortoiseDti/Tortoise-Web-Services/Server/Projects/test_data/README.txt"});
         });
-        
         $("#control_exec").on('click', function(event, ui) {
             sock.send('create_template', {
                 path: "controls/"+file_struct.controls.list_file,
@@ -279,7 +298,6 @@
                 group: 'control'
             });
         });
-        
         $("#patient_exec").on('click', function(event, ui) {
             sock.send('create_template', {
                 path: "patients/"+file_struct.patients.list_file,
@@ -288,7 +306,6 @@
                 group: 'patient'
             });
         });
-        
         $("#complete_exec").on('click', function(event, ui) {
             sock.send('reg_and_combine', {
                 working_path: 'working',
@@ -297,7 +314,6 @@
                 base_path: ''
             });
         });
-        
         $("#target_exec").on('click', function(event, ui) {
             sock.send('reg_and_combine', {
                 working_path: 'working_atlas',
@@ -306,8 +322,6 @@
                 base_path: ''
             });
         });
-        
-        
         $("#home_page").on('click', function(event, ui) {
             $("#sample_visualize").hide();
             $("#sample_pipeline").hide();
@@ -315,7 +329,6 @@
             $("#rowz").hide();
             $("#faq_content").hide();
         });
-        
         $("#apps_page").on('click', function(event, ui) {
             $("#sample_visualize").hide();
             $("#sample_pipeline").hide();
@@ -323,7 +336,6 @@
             $("#rowz").hide();
             $("#faq_content").hide();
         });
-        
         $("#dload_page").on('click', function(event, ui) {
             $("#sample_visualize").hide();
             $("#sample_pipeline").hide();
@@ -331,7 +343,6 @@
             $("#rowz").hide();
             $("#faq_content").hide();
         });
-        
         $("#pub_page").on('click', function(event, ui) {
             $("#sample_visualize").hide();
             $("#sample_pipeline").hide();
@@ -339,7 +350,6 @@
             $("#rowz").hide();
             $("#faq_content").hide();
         });
-        
         $("#faq_page").on('click', function(event, ui) {
             $("#rowz").hide();
             var faq = new FAQpage();
@@ -360,8 +370,8 @@
         $("#pipeline_page").on('click', function(event, ui){
             $("#faq_content").hide();
             $("#sample_visualize").hide();
-             $("#sample_pipeline").hide();
-             $("#sample_progress").hide();
+            $("#sample_pipeline").hide();
+            $("#sample_progress").hide();
             $("#rowz").show();
         });
         $("#FAQPAGE").on('click', function(event, ui) {
@@ -379,31 +389,45 @@
                 function(){
                     selected_vals.push($(this).val());
                 }
-            );
-            
+            );            
             console.log('You have chosen -> '+selected_vals.join(", "));
             sock.send('roi_business', {derived_values: selected_vals.join(",")});
-            /*
-            var XparamsX;
-            for(var i in selected_vals)
-            {
-                //$("#sample_visualize").append( '<div class="papaya" data-params="XparamsX"></div>' );
-            }
-            */
-            
         }); 
-        
         $("#get_graph_props").on('click', function(event, ui) {
             console.log(myDiagram.model.toJson());
-            //sg.init(myDiagram.model);
             sg.JSONToSceneGraph(myDiagram.model);
             sg.printGraph();
-            
             var x = sg.SceneGraphToJSON();
             console.log('YAYYYY');
             console.log(x);
         });
+        $("#show_graph").on('click', function(event, ui) {
+          if($("#plot_chart").is(":visible"))
+          {
+            $("#plot_chart").hide();
+            $("#plot_ROI_data").show();
+          }
+          else
+          {                  
+            $("#plot_chart").show();
+            $("#plot_ROI_data").show();
+          } 
         
+        });
+        $("#plot_ROI_data").on('click', function(event, ui) {        
+
+            // Data.points must have array of values [a,b,...,n]
+            // Data.label  must be a string (will appear beneath new chart element)
+            var data_to_add = {            
+              points : [40, 60],
+              label  : "Augustine"
+            };
+            setTimeout(function(){           
+              chart_helper.addData(data_to_add);
+            }, 800);
+            
+                   
+        });
         $('#control_grps').on('click', function(event, ui) {            
             sock.send('populate_list', {});
         });
@@ -422,505 +446,47 @@
         $("#atlasFile").on('click', function(event, ui) {
             sock.setNodeLabel('atlas');  
         });        
-        
         $('#pipeline').on('click', function(event, ui) {
-            /*
-            console.log(event);
-            console.log(ui);
-            */
-            console.log("START PIPELINE");
-            
+            console.log("START PIPELINE");            
             $("#sample_progress").hide();
             $("#sample_visualize").hide();
             $("#sample_pipeline").show();
-            //sock.send('get_file', {txt: label});
         });
-        
         $('#progress_monitor').on('click', function(event, ui) {
-            /*
-            console.log(event);
-            console.log(ui);
-            */
             console.log("MONITOR PROGRESS");
-            $("#sample_pipeline").hide();
-            
+            $("#sample_pipeline").hide();            
             $("#sample_visualize").hide();
-            $("#sample_progress").show();
-            
-            //sock.send('get_file', {txt: label});
+            $("#sample_progress").show();  
+            sock.send('monitor_progress', { dir: 'working', fileArray: ['1.nii', '2.nii', '3.nii']});          
         });
-        
         $('#visualize_stuff').on('click', function(event, ui) {
             console.log("VISUALIZE STUFF");
             $("#sample_pipeline").hide();
             $("#sample_progress").hide();
             $("#sample_visualize").show();
-            
             $("#pipeline_title").html(JSON.parse(document.getElementById("mySavedModel").value).name);
             $("#pipeline_title").show();
-            //sock.send('get_file', {txt: label});
         });
         
-        $("#sample_visualize").show();
         $("#sample_pipeline").hide();
         $("#sample_progress").hide();
-        $("#sample_visualize").hide();
     });
-    
-    $(document).on('change', '.btn-file :file', function() {
-      var input = $(this),
-          numFiles = input.get(0).files ? input.get(0).files.length : 1,
-          label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
-      input.trigger('fileselect', [numFiles, label]);
-      
-    });
-</script>
-<script id="code">
-      
-  function init() {
-    
-    if (window.goSamples) goSamples();  // init for these samples -- you don't need to call this
-    var $go = go.GraphObject.make;  // for conciseness in defining templates
-    myDiagram =
-      $go(go.Diagram, "myDiagram",  // must name or refer to the DIV HTML element
-        {
-          initialContentAlignment: go.Spot.Center,
-          allowDrop: true,  // must be true to accept drops from the Palette
-          "LinkDrawn": showLinkLabel,  // this DiagramEvent listener is defined below
-          "LinkRelinked": showLinkLabel,
-          "animationManager.duration": 000001, // slightly longer than default (600ms) animation
-          "undoManager.isEnabled": true  // enable undo & redo
-        });
-    // when the document is modified, add a "*" to the title and enable the "Save" button
-    myDiagram.addDiagramListener("Modified", function(e) {
-      var button = document.getElementById("SaveButton");
-      
-      if (button) button.disabled = !myDiagram.isModified;
-      var idx = document.title.indexOf("*");
-      if (myDiagram.isModified) {
-        if (idx < 0) document.title += "*";
-      } else {
-        if (idx >= 0) document.title = document.title.substr(0, idx);
-      }
-      $("#sample_pipeline").hide();
-    });
-      
     function showMessage(s) {
       sock.send('atlas', {txt: s});
         
     }
-    
-    
-    // LEFT CLICK HANDLERS
-    myDiagram.addDiagramListener("ObjectSingleClicked",
-      function(e) {
-        var part = e.subject.part;
-        if (!(part instanceof go.Link))
-        {
-          showMessage("Clicked on " + part.data.text + "  ya diiiig?");
-          
-          console.log("Category => "+part.data.category);
-          console.log("Value => "+part.data.text);
-          console.log("ID       => "+part.data.id);
-          console.log("PART ->>> ", part);
-          
-          if(part.data.id === "THE_APPLY_DTIREG")
-          {
-            console.log("PATH = ",part.data.path);
+    $(document).on('change', '.btn-file :file', function() {
+        var input = $(this),
+        numFiles = input.get(0).files ? input.get(0).files.length : 1,
+        label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
+        input.trigger('fileselect', [numFiles, label]);
+    });
+</script>
 
-            $("#input_content").show();           
-            //$("#mySavedModel").hide();
 
-          }
-          
-          if(part.data.id === "Atlas")
-          {
-            
-            $("#checkers").show();
-            $("#patient_content").hide();
-            $("#control_content").hide();
-            $("#atlas_content").show();
-          }
-          
-          if(part.data.id === "Control_Group")
-          {
-            console.log("Control GROUP!");            
-            $("#patient_content").hide();
-            $("#atlas_content").hide();
-            $("#control_content").show();
-          }
-          
-          if(part.data.id === "Patient_Group")
-          {
-            console.log("PATIENT GROUP!");            
-            $("#control_content").hide();
-            $("#atlas_content").hide();
-            $("#patient_content").show();
-          }
 
-        }
-        
-      }
-    );
-    
-    // BACKGROUND HANDLER
-    
-    myDiagram.addDiagramListener("BackgroundSingleClicked",
-        function(e) {
-            var part = e;
-            console.log(e);
-//            $("#input_content").hide();
-            $("#checkers").hide();
-            $("#patient_content").hide();
-            $("#control_content").hide();
-            $("#atlas_content").hide();
-        }
-    );
-    
-    // RIGHT CLICK HANDLERS
-    myDiagram.addDiagramListener("ObjectContextClicked",
-      function(e) {
-        var part = e.subject.part;
-        if (!(part instanceof go.Link))
-        {
-          showMessage("Clicked on " + part.data.text + "  ya diiiig?");
-          
-          
-          
-          console.log("Category => "+part.data.category);
-          console.log("Value => "+part.data.text);
-          console.log("ID       => "+part.data.id);
-          console.log("PART ->>> ", part);
-          
-          if(part.data.id === "THE_APPLY_DTIREG")
-          {
-            console.log("RIGHT CLICK OCCURED");            
-            $("#input_content").hide();           
-            ui.addProgressItem();
-          }
-                    
-          if(part.data.id === "Atlas")
-          {
-            $("#checkers").hide();
-          }
-          
-          if(part.data.id === "THE_COMB_DISP")
-          {
-            sock.send('combine_xform', {
-                    src: '/raid1e/Jeff/cpp_test_data/patients/PAT_100_SCAN2_N1_DT_aff.txt', 
-                    tgt: '/raid1e/Jeff/cpp_test_data/patients/PAT_100_SCAN2_N1_DT_deffield_MINV.nii', 
-                    out: '/stbb_home/jenkinsjc/Desktop/combined_displacement_testeez.nii'
-            });
-          }
-          
-          if(part.data.id === "THE_APPLY_TTT")
-          {
-            sock.send('apply_ttt_xform', {
-                    orig: '/raid1e/Jeff/cpp_test_data/patients/PAT_100_SCAN2_N1_DT.nii', 
-                    disp: '/stbb_home/jenkinsjc/Desktop/combined_displacement_testeez.nii', 
-                    out: '/stbb_home/jenkinsjc/Desktop/output_PAT_100_SCAN2_N1_DT_testeez.nii'
-            });          
-          }          
-        }        
-      }
-    );
-        
-    // helper definitions for node templates
-    function nodeStyle() {
-      return [
-        // The Node.location comes from the "loc" property of the node data,
-        // converted by the Point.parse static method.
-        // If the Node.location is changed, it updates the "loc" property of the node data,
-        // converting back using the Point.stringify static method.
-        new go.Binding("location", "loc", go.Point.parse).makeTwoWay(go.Point.stringify),
-        {
-          // the Node.location is at the center of each node
-          locationSpot: go.Spot.Center,
-          //isShadowed: true,
-          //shadowColor: "#888",
-          // handle mouse enter/leave events to show/hide the ports
-          
-          mouseEnter: function (e, obj) { showPorts(obj.part, true); console.log("EVENT IN DGM LISTNER! : ->  ",obj); },
-          mouseLeave: function (e, obj) { showPorts(obj.part, false); }
-        }
-      ];
-    }
-    // Define a function for creating a "port" that is normally transparent.
-    // The "name" is used as the GraphObject.portId, the "spot" is used to control how links connect
-    // and where the port is positioned on the node, and the boolean "output" and "input" arguments
-    // control whether the user can draw links from or to the port.
-    function makePort(name, spot, output, input) {
-      // the port is basically just a small circle that has a white stroke when it is made visible
-      return $go(go.Shape, "Circle",
-               {
-                  fill: "transparent",
-                  stroke: null,  // this is changed to "white" in the showPorts function
-                  desiredSize: new go.Size(8, 8),
-                  alignment: spot, alignmentFocus: spot,  // align the port on the main Shape
-                  portId: name,  // declare this object to be a "port"
-                  fromSpot: spot, toSpot: spot,  // declare where links may connect at this port
-                  fromLinkable: output, toLinkable: input,  // declare whether the user may draw links to/from here
-                  cursor: "pointer"  // show a different cursor to indicate potential link point
-               });
-    }
-    // define the Node templates for regular nodes
-    var lightText = 'whitesmoke';
-    
-    myDiagram.nodeTemplateMap.add("",  // the default category
-      $go(go.Node, "Spot", nodeStyle(),
-        // the main object is a Panel that surrounds a TextBlock with a rectangular Shape
-        $go(go.Panel, "Auto",
-          $go(go.Shape, "Rectangle",
-            { fill: "#00A9C9", stroke: null, minSize: new go.Size(50,80) },
-            new go.Binding("figure", "figure")),
-          $go(go.TextBlock,
-            {
-              font: "bold 11pt Helvetica, Arial, sans-serif",
-              stroke: lightText,
-              margin: 8,
-              maxSize: new go.Size(160, NaN),
-              wrap: go.TextBlock.WrapFit,
-              editable: true
-            },
-            new go.Binding("text").makeTwoWay())
-        ),
-        // four named ports, one on each side:
-        makePort("T", go.Spot.Top, false, true),
-        makePort("L", go.Spot.Left, true, true),
-        makePort("R", go.Spot.Right, true, true),
-        makePort("B", go.Spot.Bottom, true, false)
-      ));
+<script id="code">
       
-    myDiagram.nodeTemplateMap.add("Start",
-      $go(go.Node, "Spot", nodeStyle(),
-        $go(go.Panel, "Auto",
-          $go(go.Shape, "Circle",
-            { minSize: new go.Size(40, 40), fill: "#79C900", stroke: null }),
-          $go(go.TextBlock, "Start",
-            { font: "bold 11pt Helvetica, Arial, sans-serif", stroke: lightText },
-            new go.Binding("text")
-          )
-        ),
-        // three named ports, one on each side except the top, all output only:
-        makePort("L", go.Spot.Left, true, false),
-        makePort("R", go.Spot.Right, true, false),
-        makePort("B", go.Spot.Bottom, true, false)
-      ));
-      
-     myDiagram.nodeTemplateMap.add("Group",
-      $go(go.Node, "Spot", nodeStyle(),
-        $go(go.Panel, "Auto",
-          $go(go.Shape, "Circle",
-            { minSize: new go.Size(40, 40), fill: "#ABCDBC", stroke: null }),
-          $go(go.TextBlock, "Group",
-            { font: "bold 11pt Helvetica, Arial, sans-serif", stroke: lightText, editable: true },
-            new go.Binding("text"))
-        ),
-        // three named ports, one on each side except the top, all output only:
-        makePort("T", go.Spot.Top, false, true),
-        makePort("L", go.Spot.Left, true, false),
-        makePort("R", go.Spot.Right, true, false),
-        makePort("B", go.Spot.Bottom, true, false)
-      )); 
-      
-      myDiagram.nodeTemplateMap.add("Subject",
-      $go(go.Node, "Spot", nodeStyle(),
-        $go(go.Panel, "Auto",
-          $go(go.Shape, "Circle",
-            { minSize: new go.Size(40, 40), fill: "#CBABCD", stroke: null }),
-          $go(go.TextBlock, "Subject", 
-            { font: "bold 11pt Helvetica, Arial, sans-serif", stroke: lightText },
-            new go.Binding("text"))
-        ),
-        // three named ports, one on each side except the top, all output only:
-        makePort("T", go.Spot.Top, false, true),
-        makePort("L", go.Spot.Left, true, false),
-        makePort("R", go.Spot.Right, true, false),
-        makePort("B", go.Spot.Bottom, true, false)
-      )); 
-      
-      myDiagram.nodeTemplateMap.add("Atlas",
-      $go(go.Node, "Spot", nodeStyle(),
-        $go(go.Panel, "Auto",
-          $go(go.Shape, "Rectangle",
-            { minSize: new go.Size(40, 40), fill: "#A1B2C3", stroke: null }),
-          $go(go.TextBlock, "Atlas",
-            { font: "bold 11pt Helvetica, Arial, sans-serif", stroke: lightText, editable: true},
-            new go.Binding("text"))
-        ),
-        // three named ports, one on each side except the top, all output only:
-        makePort("T", go.Spot.Top, false, true),
-        makePort("L", go.Spot.Left, true, false),
-        makePort("R", go.Spot.Right, true, false),
-        makePort("B", go.Spot.Bottom, true, false)
-      ));
-      
-    // replace the default Link template in the linkTemplateMap
-    myDiagram.linkTemplate =
-      $go(go.Link,  // the whole link panelinspector
-        {
-          routing: go.Link.AvoidsNodes,
-          curve: go.Link.JumpOver,
-          corner: 5, toShortLength: 4,
-          relinkableFrom: true,
-          relinkableTo: true,
-          reshapable: true,
-          resegmentable: true,
-          // mouse-overs subtly highlight links:
-          mouseEnter: function(e, link) { link.findObject("HIGHLIGHT").stroke = "rgba(30,144,255,0.2)"; },
-          mouseLeave: function(e, link) { link.findObject("HIGHLIGHT").stroke = "transparent"; }
-        },
-        new go.Binding("points").makeTwoWay(),
-        $go(go.Shape,  // the highlight shape, normally transparent
-          { isPanelMain: true, strokeWidth: 8, stroke: "transparent", name: "HIGHLIGHT" }),
-        $go(go.Shape,  // the link path shape
-          { isPanelMain: true, stroke: "gray", strokeWidth: 2 }),
-        $go(go.Shape,  // the arrowhead
-          { toArrow: "standard", stroke: null, fill: "gray"}),
-        $go(go.Panel, "Auto",  // the link label, normally not visible
-          { visible: false, name: "LABEL", segmentIndex: 2, segmentFraction: 0.5},
-          new go.Binding("visible", "visible").makeTwoWay(),
-          $go(go.Shape, "RoundedRectangle",  // the label shapemyDiagram
-            { fill: "#F8F8F8", stroke: null }),
-          $go(go.TextBlock, "Yes",  // the label
-            {
-              textAlign: "center",
-              font: "10pt helvetica, arial, sans-serif",
-              stroke: "#333333",
-              editable: true
-            },
-            new go.Binding("text", "text").makeTwoWay())
-        )
-      );
-    // Make link labels visible if coming out of a "conditional" node.
-    // This listener is called by the "LinkDrawn" and "LinkRelinked" DiagramEvents.
-    function showLinkLabel(e) {
-      var label = e.subject.findObject("LABEL");
-      if (label !== null) label.visible = (e.subject.fromNode.data.figure === "Diamond");
-    }
-    // temporary links used by LinkingTool and RelinkingTool are also orthogonal:
-    myDiagram.toolManager.linkingTool.temporaryLink.routing = go.Link.Orthogonal;
-    myDiagram.toolManager.relinkingTool.temporaryLink.routing = go.Link.Orthogonal;
-    load();  // load an initial diagram from some JSON text
-    // initialize the Palette that is on the left side of the page
-    myPalette =
-      $go(go.Palette, "myPalette",  // must name or refer to the DIV HTML element
-        {
-          "animationManager.duration": 800, // slightly longer than default (600ms) animation
-          nodeTemplateMap: myDiagram.nodeTemplateMap,  // share the templates used by myDiagram
-          model: new go.GraphLinksModel([  // specify the contents of the Palette
-            { category: "Start", text: "Start", id: "THE_START", "path": "asdf", "lbl": "" },
-            { category: "Subject", text: "Subject", id: "THE_Subject", "path": "asdf", "lbl": ""},
-            { category: "Group", text: "Group", id: "THE_Group", "path": "asdf", "lbl": ""},            
-            { category: "Atlas", id: "Atlas", "path": "asdf", "lbl": ""},
-          ])
-        });
-  }
-  // Make all ports on a node visible when the mouse is over the node
-  function showPorts(node, show) {
-    var diagram = node.diagram;
-    if (!diagram || diagram.isReadOnly || !diagram.allowLink) return;
-    node.ports.each(function(port) {
-        port.stroke = (show ? "white" : null);
-      });
-  }
-  // Show the diagram's model in JSON format that the user may edit
-  function save() {
-    document.getElementById("mySavedModel").value = myDiagram.model.toJson();
-    myDiagram.isModified = false;
-  }
-  function saveLoad() {
-    document.getElementById("mySavedModel").value = JSON.stringify($go("myDiagram"));//myDiagram.model.toJson();
-    myDiagram.isModified = true;
-  }
-  function load() {
-    myDiagram.model = go.Model.fromJson(document.getElementById("mySavedModel").value);
-    var x = JSON.parse(document.getElementById("mySavedModel").value);
-    $("#pipeline_title").html(x.name);
-    console.log(x.name);
-  }
-  
-  // add an SVG rendering of the diagram at the end of this page
-  function makeSVG() {
-    var svg = myDiagram.makeSvg({
-        scale: 0.5
-      });
-    svg.style.border = "1px solid black";
-    obj = document.getElementById("SVGArea");
-    obj.appendChild(svg);
-    if (obj.children.length > 0) {
-      obj.replaceChild(svg, obj.children[0]);
-    }    
-  }
-  
-  function otherView(opt1, opt2){
-  
-    //$("#mySavedModel").hide();
-    if(opt1 !== null)
-    {    
-      myDiagram.isModified = false;
-      var x = myDiagram.model.nodeDataArray;
-      x.push(opt1);
-      myDiagram.model.nodeDataArray = x;
-      console.log('new Data Added added');
-      myDiagram.isModified = true;      
-    }
-    else
-    {
-      myDiagram.model.nodeDataArray = [
-        {"category":"Comment", "loc":"360 -10", "text":"Kookie Brittle", "key":-13},
-        {"key":-1, "category":"Start", "loc":"175 0", "text":"Start"},
-        {"key":0, "loc":"0 77", "text":"Preheat oven to 375 F"},
-        {"key":1, "loc":"175 100", "text":"In a bowl, blend: 1 cup margarine, 1.5 teaspoon vanilla, 1 teaspoon salt"},
-        {"key":2, "loc":"175 190", "text":"Gradually beat in 1 cup sugar and 2 cups sifted flour"},
-        {"key":3, "loc":"175 270", "text":"Mix in 6 oz (1 cup) Nestle's Semi-Sweet Chocolate Morsels"},
-        {"key":4, "loc":"175 370", "text":"Press evenly into ungreased 15x10x1 pan"},
-        {"key":5, "loc":"352 85", "text":"Finely chop 1/2 cup of your choice of nuts"},
-        {"key":6, "loc":"175 440", "text":"Sprinkle nuts on top"},
-        {"key":7, "loc":"175 500", "text":"Bake for 25 minutes and let cool"},
-        {"key":8, "loc":"175 570", "text":"Cut into rectangular grid"},
-        {"key":-2, "category":"End", "loc":"175 640", "text":"Enjoy!"}
-      ];
-    }
-    if(opt2)
-    {
-      myDiagram.isModified = false;
-      var x = [];
-      x =myDiagram.model.linkDataArray;
-      x.push(opt2);
-      myDiagram.model.linkDataArray = x;
-      console.log('new Data Added');
-      myDiagram.isModified = true;
-      
-      save();
-      load();
-    }
-    
-    else
-    {
-    setTimeout(function(){
-    myDiagram.model.linkDataArray = [
-      {"from":1, "to":2, "fromPort":"B", "toPort":"T"},
-      {"from":2, "to":3, "fromPort":"B", "toPort":"T"},
-      {"from":3, "to":4, "fromPort":"B", "toPort":"T"},
-      {"from":4, "to":6, "fromPort":"B", "toPort":"T"},
-      {"from":6, "to":7, "fromPort":"B", "toPort":"T"},
-      {"from":7, "to":8, "fromPort":"B", "toPort":"T"},
-      {"from":8, "to":-2, "fromPort":"B", "toPort":"T"},
-      {"from":-1, "to":0, "fromPort":"B", "toPort":"T"},
-      {"from":-1, "to":1, "fromPort":"B", "toPort":"T"},
-      {"from":-1, "to":5, "fromPort":"B", "toPort":"T"},
-      {"from":5, "to":4, "fromPort":"B", "toPort":"T"},
-    ];    
-    }, 400);
-    
-      console.log('links added');
-    }
-  }
-  
-  
-
-  
   
   function addLink()
   {
@@ -934,6 +500,29 @@
   $.contextMenu.separator,
   {'Option 2':function(menuItem,menu) { alert("You clicked Option 2!"); } }
 ];
+
+var randomScalingFactor = function(){ return Math.round(Math.random()*100)};
+
+	var barChartData = {
+		labels : ["January","February","March","April","May","June","July"],
+		datasets : [
+			{
+				fillColor : "rgba(220,220,220,0.5)",
+				strokeColor : "rgba(220,220,220,0.8)",
+				highlightFill: "rgba(220,220,220,0.75)",
+				highlightStroke: "rgba(220,220,220,1)",
+				data : [randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor()]
+			},
+			{
+				fillColor : "rgba(151,187,205,0.5)",
+				strokeColor : "rgba(151,187,205,0.8)",
+				highlightFill : "rgba(151,187,205,0.75)",
+				highlightStroke : "rgba(151,187,205,1)",
+				data : [randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor()]
+			}
+		]
+	};
+
 $(function() {
   $('#otherModel').contextMenu(menu1,{theme:'xp'});
   
@@ -943,14 +532,20 @@ $(function() {
   ui.atlasInput('Atlas');
         var params = [];
         params["worldSpace"] = true;
-        params["images"] = ["../js/papaya/Papaya-master/data/sample_image.nii.gz"];
+        params["images"] = ["js/papaya/Papaya-master/data/sample_image.nii.gz"];
         params["expandable"] = true;
     var nav = new NavBar();
     $("#theNavBar").html(nav.content());
     //$("#main_container").hide();
     $("#rowz").hide();
+        
+    var ctx = document.getElementById("plot_canvas").getContext("2d");
+		ChartPointer = new Chart(ctx).Bar(barChartData, {
+			responsive : true
+		});
+    chart_helper.setChart(ChartPointer);
     
-    
+    $("#plot_chart").hide();
 });
 </script>
 </head>
@@ -964,10 +559,6 @@ $(function() {
 <div id="theNavBar" class="row"></div> 
   <div class="jumbotron" style="background: url('img/nihpd_header.png') top center no-repeat;">
     <h1></h1>
-    <!--
-    <h1>tortoiseDTI</h1>
-    <p>Visually construct and analyze DTI brain atlases</p> 
-    -->
   </div>
 
 <div class="row">    
@@ -1056,11 +647,6 @@ $(function() {
         
         </div>
         
-        <!--
-        <div class="form-group" id="file1"><label>File 1 input</label><input type="file"></div>
-        <div class="form-group" id="file2"><label>File 2 input</label><input type="file"></div>
-        <div class="form-group" id="file3"><label>File output</label><input type="file"></div>
-        -->
       </div>
       <br>
       <div id="checkers" class="form-group"></div>
@@ -1111,8 +697,8 @@ $(function() {
                                         <span class="pull-right text-muted">40% Complete</span>
                                     </p>
                                     <div class="progress progress-striped active">
-                                        <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%">
-                                            <span class="sr-only">40% Complete (success)</span>
+                                        <div class="progress-bar progress-bar-success" id="TASK_1_PROGRESS" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%">
+                                            <span class="sr-only" value="40% Complete (success)"></span>
                                         </div>
                                     </div>
                                 </div>
@@ -1179,24 +765,25 @@ $(function() {
     </div>    
     <div class="row">
         <div id="sample_visualize" class="well well-lg" >
-          <iframe src="../Web/js/papaya/Papaya-master/build/index.html"  width="100%" height="700px" scrolling="yes" frameborder="0"></iframe>
+        
           
-        <!--          
-          		<div class="smallViewer">
-		            <div class="papaya" data-params="params1" id="p1"></div>
+  
+          		<div class="smallViewer" id="papaya_1">
+		            <div class="papaya" data-params="params1"></div>
 		          </div>
 		           
-		          <div class="smallViewer">
-            		<div class="papaya" data-params="params2" id="p2"></div>
+		          <div class="smallViewer" id="papaya_2">
+            		<div class="papaya" data-params="params2"></div>
               </div>
          
-          /Web/js/papaya/Papaya-master/build 
-                <div class="papaya" data-params="params"></div>
-                <span class="btn btn-default" id="show_derived_values">Show Selected Derived Values</span>
-          -->
+              <span class="btn btn-default" id="show_derived_values">Show Selected Derived Values</span>
+          
         </div>
 <span class="btn btn-default" id="show_derived_values">Show Selected Derived Values</span>
 <span class="btn btn-default" id="get_graph_props">Get Graph Properties</span>
+<span class="btn btn-default" id="show_graph">Show Graph</span>
+<span class="btn btn-default" id="plot_ROI_data">Plot ROI Data</span>
+
     
     <div class="panel panel-default">
         <div class="panel-heading">
@@ -1246,6 +833,13 @@ $(function() {
 </div>
 </div>
 
+    <div class="row" id="plot_chart">
+    
+    		<div style="width: 50%">
+			    <canvas id="plot_canvas" height="450" width="600"></canvas>
+		    </div>
+    
+    </div>
 <div id="faq_content"></div>
     <hr>
     
