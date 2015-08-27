@@ -19,7 +19,8 @@ var module = require('module');
      create_template,
      gxf,
      rag,
-     attt;
+     attt,
+     scrape;
      
      
      
@@ -31,6 +32,31 @@ var module = require('module');
     
     var ProjectPath  = project.getDirName(); // Server/Projects
     var ProjectName;//  = project.getProjectName();
+    
+    
+    var ScraperProxy = require('./ScraperProxy.js').ScraperProxy;
+    
+function child_scrape(data,socket)
+{
+
+  ScraperProxy.ScrapeDirForFiles(data, socket, ProjectName, CoreLibsPath);
+  //  CoreLibsPath+'/combine_xform_helper.sh '+ProjectName+
+  /*
+ scrape = childProcess.exec('ls -lsa '+dir, function (error, stdout, stderr) {
+   if (error) {
+     console.log(error.stack);
+     console.log('Error code: '+error.code);
+     console.log('Signal received: '+error.signal);
+   }
+   console.log('Child Process STDOUT: '+stdout);
+   console.log('Child Process STDERR: '+stderr);
+ });
+ ls.on('exit', function (code) {
+   console.log('Child process exited with exit code '+code);
+ }); 
+  */
+
+};
 
 function child_ls(dir)
 {
@@ -244,6 +270,7 @@ function child_createProject(data)
 
 
 
+
 io.sockets.on('connection', function(socket){
   
   var initial = true;
@@ -319,8 +346,12 @@ io.sockets.on('connection', function(socket){
     child_readFile(data.path, data.cat);
    //"/stbb_home/jenkinsjc/Desktop/new_tortoiseDti/Tortoise-Web-Services/Web/README.txt");
       // socket.emit('file_contents', x);
-      
-
+  });
+  
+  socket.on('monitor_progress', function(data){
+    
+     child_scrape(data, socket);
+  
   });
 
   socket.on('request', function(requestData){
