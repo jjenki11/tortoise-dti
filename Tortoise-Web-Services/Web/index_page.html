@@ -398,8 +398,10 @@
             sg.JSONToSceneGraph(myDiagram.model);
             sg.printGraph();
             var x = sg.SceneGraphToJSON();
+            
             console.log('YAYYYY');
             console.log(x);
+            gojs_helper.updateSceneGraph(x);
         });
         $("#show_graph").on('click', function(event, ui) {
           if($("#plot_chart").is(":visible"))

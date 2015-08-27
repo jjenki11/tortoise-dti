@@ -10,6 +10,8 @@ var GoJsHelper = function(diagram)
     var d_gram;
   
     var $go;
+    
+    var scene_graph;
   
   var init = function(diagram) {
     
@@ -38,9 +40,6 @@ var GoJsHelper = function(diagram)
       }
       $("#sample_pipeline").hide();
     });
-      
-    
-    
     
     // LEFT CLICK HANDLERS
     myDiagram.addDiagramListener("ObjectSingleClicked",
@@ -48,39 +47,31 @@ var GoJsHelper = function(diagram)
         var part = e.subject.part;
         if (!(part instanceof go.Link))
         {
-          showMessage("Clicked on " + part.data.text + "  ya diiiig?");
-          
+          showMessage("Clicked on " + part.data.text + "  ya diiiig?");          
           console.log("Category => "+part.data.category);
           console.log("Value => "+part.data.text);
           console.log("ID       => "+part.data.id);
-          console.log("PART ->>> ", part);
-          
+          console.log("PART ->>> ", part);          
           if(part.data.id === "THE_APPLY_DTIREG")
           {
             console.log("PATH = ",part.data.path);
-
             $("#input_content").show();           
             //$("#mySavedModel").hide();
-
-          }
-          
+          }          
           if(part.data.id === "Atlas")
-          {
-            
+          {            
             $("#checkers").show();
             $("#patient_content").hide();
             $("#control_content").hide();
             $("#atlas_content").show();
-          }
-          
+          }          
           if(part.data.id === "Control_Group")
           {
             console.log("Control GROUP!");            
             $("#patient_content").hide();
             $("#atlas_content").hide();
             $("#control_content").show();
-          }
-          
+          }          
           if(part.data.id === "Patient_Group")
           {
             console.log("PATIENT GROUP!");            
@@ -112,15 +103,11 @@ var GoJsHelper = function(diagram)
         var part = e.subject.part;
         if (!(part instanceof go.Link))
         {
-          showMessage("Clicked on " + part.data.text + "  ya diiiig?");
-          
-          
-          
+          showMessage("Clicked on " + part.data.text + "  ya diiiig?");          
           console.log("Category => "+part.data.category);
           console.log("Value => "+part.data.text);
           console.log("ID       => "+part.data.id);
-          console.log("PART ->>> ", part);
-          
+          console.log("PART ->>> ", part);          
           if(part.data.id === "THE_APPLY_DTIREG")
           {
             console.log("RIGHT CLICK OCCURED");            
@@ -234,7 +221,7 @@ var GoJsHelper = function(diagram)
       myDiagram.nodeTemplateMap.add("Atlas",
       $go(go.Node, "Spot", nodeStyle(),
         $go(go.Panel, "Auto",
-          $go(go.Shape, "Rectangle",
+          $go(go.Shape, "Circle",
             { minSize: new go.Size(40, 40), fill: "#A1B2C3", stroke: null }),
           $go(go.TextBlock, "Atlas",
             { font: "bold 11pt Helvetica, Arial, sans-serif", stroke: lightText, editable: true},
@@ -242,7 +229,7 @@ var GoJsHelper = function(diagram)
         ),
         // three named ports, one on each side except the top, all output only:
         makePort("T", go.Spot.Top, false, true),
-        makePort("L", go.Spot.Left, true, false),
+        makePort("L", go.Spot.Left, false, true),
         makePort("R", go.Spot.Right, true, false),
         makePort("B", go.Spot.Bottom, true, false)
       ));
@@ -402,17 +389,20 @@ var GoJsHelper = function(diagram)
       console.log(x.name);
     }
     
-
-
-
-
-
+  function updateSceneGraph(scene) {  
+    scene_graph = scene;
+    
+  }
 
   return {
   
     init       : init,  
     load       : load,
     getDiagram : function(){return d_gram;},
+    updateSceneGraph : updateSceneGraph,
+    attachToNode : function(node) {
+    
+    },
     
   };
   
