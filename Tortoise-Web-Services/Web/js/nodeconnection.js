@@ -4,28 +4,32 @@ var nodeConnection = function()
 
   var socket = new io.connect('http://localhost:8444');
   var plugins = null;
+  var chartjs = null;
   
   var lastLabelClicked = null;
   
   function setNodeLabel(lbl) {
     lastLabelClicked = lbl;  
-  };
-  
+  };  
   function getNodeLabel(){
     return lastLabelClicked;
   };
   function send(msgType, data, callback)
   {
     socket.emit(msgType, data, callback);
-  };
-  
-   function splitRows(data)
+  };  
+    function splitRows(data)
     {
       dataChunk = "";
       dataChunk = data.split("\n");
       return dataChunk;
-    
+
     };  
+    
+  function setChartHelper(helper)
+  {
+    chartjs=helper;
+  };
   
   function attachHandler(msgType, handler)
   {
@@ -77,6 +81,30 @@ var nodeConnection = function()
 	$('#enterPass').on("click", function(){
 	  socket.emit('passwordEntered', {});
 	});
+
+    socket.on('csv_response', function(csv){
+        console.log('csv file found: ');
+        console.log(csv.data);
+        var x = chartjs.CsvToJson(csv.data);
+        
+        console.log('in nodeconnection, csv reply is = ');
+        console.log(x);
+        
+        console.log(' get just column with a specified name (File Path): ');
+        console.log(chartjs.getColumnByName(x, 'ROI Label'));
+        
+        var roi1 = chartjs.getRowsWithColumnValue(x, 'ROI Label', 'rect_roi_1');
+        console.log('rows with ROI Label = rect_roi_1');
+        console.log(roi1);
+        
+        var un = chartjs.getUniqueValuesInColumn(x, 'Derived Label');
+
+        var j2bar = chartjs.JsonToBarChartData(x);
+        console.log(j2bar);
+        chartjs.updateChart(j2bar);
+//        chartjs.addData(j2bar);
+
+    });
 
 	socket.on('plot_data', function(data) {	  
     plugins.updatePlotWindow(data);
@@ -216,7 +244,8 @@ var nodeConnection = function()
 	  attachHandler : attachHandler,
 	  detachHandler : detachHandler,
 	  setNodeLabel  : setNodeLabel,
-	  getNodeLabel  : getNodeLabel
+	  getNodeLabel  : getNodeLabel,
+	  setChartHelper: setChartHelper,
 	};
 };
 

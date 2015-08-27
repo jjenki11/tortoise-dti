@@ -20,7 +20,8 @@ var module = require('module');
      gxf,
      rag,
      attt,
-     scrape;
+     scrape,
+     csv;
      
      
      
@@ -38,24 +39,7 @@ var module = require('module');
     
 function child_scrape(data,socket)
 {
-
   ScraperProxy.ScrapeDirForFiles(data, socket, ProjectName, CoreLibsPath);
-  //  CoreLibsPath+'/combine_xform_helper.sh '+ProjectName+
-  /*
- scrape = childProcess.exec('ls -lsa '+dir, function (error, stdout, stderr) {
-   if (error) {
-     console.log(error.stack);
-     console.log('Error code: '+error.code);
-     console.log('Signal received: '+error.signal);
-   }
-   console.log('Child Process STDOUT: '+stdout);
-   console.log('Child Process STDERR: '+stderr);
- });
- ls.on('exit', function (code) {
-   console.log('Child process exited with exit code '+code);
- }); 
-  */
-
 };
 
 function child_ls(dir)
@@ -104,6 +88,9 @@ function child_readFile(file, category)
             atlas_subjects = stdout.split('\n');
             //atlas_subjects.push(stdout+'\n');
             break;
+        case 'csv'     :
+            
+            break;
         default        :
             console.log('unknown category.');
     }
@@ -111,6 +98,25 @@ function child_readFile(file, category)
  });
 
  rf.on('exit', function (code) {
+   console.log('Child process exited with exit code '+code);
+ });
+};
+
+function child_readCSVFile(data,socket)
+{
+  csv = childProcess.exec('cat '+ProjectName+'/'+data.filename, function (error, stdout, stderr) {
+   if (error) {
+     console.log(error.stack);
+     console.log('Error code: '+error.code);
+     console.log('Signal received: '+error.signal);
+   }
+   console.log('Child Process STDOUT: '+stdout);
+   console.log('Child Process STDERR: '+stderr);
+    
+   socket.emit('csv_response', {data: stdout});
+ });
+
+ csv.on('exit', function (code) {
    console.log('Child process exited with exit code '+code);
  });
 };
@@ -330,8 +336,7 @@ io.sockets.on('connection', function(socket){
   
   socket.on('create_template', function(data){
   // uncomment below when ready to test the whole thing
-    child_CreateTemplate(data);
-    
+    child_CreateTemplate(data);    
   });
   
   socket.on('reg_and_combine', function(data){
@@ -352,6 +357,10 @@ io.sockets.on('connection', function(socket){
     
      child_scrape(data, socket);
   
+  });
+
+  socket.on('get_csv_file', function(data){
+     child_readCSVFile(data,socket);
   });
 
   socket.on('request', function(requestData){

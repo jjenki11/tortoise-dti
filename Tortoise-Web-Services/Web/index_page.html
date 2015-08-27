@@ -418,15 +418,19 @@
 
             // Data.points must have array of values [a,b,...,n]
             // Data.label  must be a string (will appear beneath new chart element)
+            /*
             var data_to_add = {            
               points : [40, 60],
               label  : "Augustine"
             };
+            //chart_helper.clearData();
+            
             setTimeout(function(){           
               chart_helper.addData(data_to_add);
             }, 800);
-            
-                   
+            */
+            sock.send('get_csv_file', {filename: 'roi_business_out.csv'});   
+            //chart_helper.addData(data_to_add); 
         });
         $('#control_grps').on('click', function(event, ui) {            
             sock.send('populate_list', {});
@@ -457,7 +461,8 @@
             $("#sample_pipeline").hide();            
             $("#sample_visualize").hide();
             $("#sample_progress").show();  
-            sock.send('monitor_progress', { dir: 'working', fileArray: ['1.nii', '2.nii', '3.nii']});          
+            sock.send('monitor_progress', { dir: 'working', fileArray: ['1.nii', '2.nii', '3.nii']});    
+              
         });
         $('#visualize_stuff').on('click', function(event, ui) {
             console.log("VISUALIZE STUFF");
@@ -502,7 +507,7 @@
 ];
 
 var randomScalingFactor = function(){ return Math.round(Math.random()*100)};
-
+/*
 	var barChartData = {
 		labels : ["January","February","March","April","May","June","July"],
 		datasets : [
@@ -521,6 +526,10 @@ var randomScalingFactor = function(){ return Math.round(Math.random()*100)};
 				data : [randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor()]
 			}
 		]
+	};*/
+	var barChartData = {
+	    labels : [],
+	    datasets: []
 	};
 
 $(function() {
@@ -544,7 +553,7 @@ $(function() {
 			responsive : true
 		});
     chart_helper.setChart(ChartPointer);
-    
+    sock.setChartHelper(chart_helper);
     $("#plot_chart").hide();
 });
 </script>
@@ -833,10 +842,10 @@ $(function() {
 </div>
 </div>
 
-    <div class="row" id="plot_chart">
+    <div class="row" id="plot_chart" style="text-align: center ;">
     
-    		<div style="width: 50%">
-			    <canvas id="plot_canvas" height="450" width="600"></canvas>
+    		<div style="width: 60%;">
+			    <canvas id="plot_canvas" height="450" width="600" style="text-align: center ;"></canvas>
 		    </div>
     
     </div>
