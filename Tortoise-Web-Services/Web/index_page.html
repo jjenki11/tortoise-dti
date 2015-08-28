@@ -234,7 +234,7 @@
     
     var ui;
     var mri;
-    var sg = new SceneGraph();
+    var sg = new SceneGraph(sock);
     var gojs_helper = new GoJsHelper();
     var chart_helper = new ChartHelper();
         
@@ -246,7 +246,7 @@
 
   $(document).ready(function(){
       
-        gojs_helper.init("myDiagram");
+        gojs_helper.init("myDiagram",sock);
         gojs_helper.load();
         
         //$("#input_content").hide();
@@ -402,6 +402,9 @@
             console.log('YAYYYY');
             console.log(x);
             gojs_helper.updateSceneGraph(x);
+            console.log('The root = ',myDiagram);
+            sock.send('scene_graph', {data: myDiagram.model.toJson(), txt: "initialize"});
+            
         });
         $("#show_graph").on('click', function(event, ui) {
           if($("#plot_chart").is(":visible"))
@@ -557,6 +560,7 @@ $(function() {
     chart_helper.setChart(ChartPointer);
     sock.setChartHelper(chart_helper);
     $("#plot_chart").hide();
+    
 });
 </script>
 </head>
@@ -676,9 +680,9 @@ $(function() {
   "linkFromPortIdProperty": "fromPort",
   "linkToPortIdProperty": "toPort",
   "nodeDataArray": [ 
-{"category":"Group", "text":"Patient Group", "id":"Patient_Group", "path":"asdf", "lbl":"", "key":-3, "loc":"-363.5 -428.6999969482422"},
-{"category":"Group", "text":"Control Group", "id":"Control_Group", "path":"asdf", "lbl":"", "key":-2, "loc":"-363.5 -254.6999969482422"},
-{"category":"Atlas", "text":"Target Atlas", "id":"Atlas", "name": "Target Atlas", "path":"asdf", "lbl":"", "key":-4, "loc":"-363.5 -53.69999694824219"}
+{"category":"Group", "text":"Patient Group", "id":"Patient_Group", "parents": [], "children": [-2], "path":"asdf", "lbl":"", "key":-3, "loc":"-363.5 -428.6999969482422"},
+{"category":"Group", "text":"Control Group", "id":"Control_Group", "parents": [-3], "children": [-4], "path":"asdf", "lbl":"", "key":-2, "loc":"-363.5 -254.6999969482422"},
+{"category":"Atlas", "text":"Target Atlas", "id":"Atlas", "name": "Target Atlas", "parents": [-2], "children": [], "path":"asdf", "lbl":"", "key":-4, "loc":"-363.5 -53.69999694824219"}
  ],
   "linkDataArray": [ 
 {"from":-3, "to":-2, "fromPort":"B", "toPort":"T", "points":[-363.5,-396.22325276219567,-363.5,-386.22325276219567,-363.5,-341.6999969482422,-363.5,-341.6999969482422,-363.5,-297.1767411342887,-363.5,-287.1767411342887]},

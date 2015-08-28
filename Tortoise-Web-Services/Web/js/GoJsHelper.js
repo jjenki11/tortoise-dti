@@ -5,7 +5,7 @@
 */
 
 
-var GoJsHelper = function(diagram)
+var GoJsHelper = function(diagram,socket)
 {
     var d_gram;
   
@@ -13,7 +13,7 @@ var GoJsHelper = function(diagram)
     
     var scene_graph;
   
-  var init = function(diagram) {
+  var init = function(diagram,socket) {
     
     if (window.goSamples) goSamples();  // init for these samples -- you don't need to call this
     $go = go.GraphObject.make;  // for conciseness in defining templates
@@ -38,7 +38,7 @@ var GoJsHelper = function(diagram)
       } else {
         if (idx >= 0) document.title = document.title.substr(0, idx);
       }
-      $("#sample_pipeline").hide();
+     // $("#sample_pipeline").hide();
     });
     
     // LEFT CLICK HANDLERS
@@ -52,6 +52,10 @@ var GoJsHelper = function(diagram)
           console.log("Value => "+part.data.text);
           console.log("ID       => "+part.data.id);
           console.log("PART ->>> ", part);          
+          console.log("TREE ROOT ID = ", part.findTreeRoot().data.key);
+          console.log("Parents   => "+part.data.parents);
+          console.log("Children   => "+part.data.children);
+          
           if(part.data.id === "THE_APPLY_DTIREG")
           {
             console.log("PATH = ",part.data.path);
@@ -140,8 +144,44 @@ var GoJsHelper = function(diagram)
         }        
       }
     );
-        
-
+       
+    // notice whenever a node is dropped onto canvas
+    myDiagram.addDiagramListener("ExternalObjectsDropped",
+        function(e) {
+            var part = e;
+            e.subject.parents = [];
+            e.subject.children = [];
+            //socket.send('new_gojs_node', {node: e.subject});
+            //console.log(e);
+            //if(part.id == "nodeDataArray"){
+                console.log("myDiagram.model.ADDCHANGEDLISTENER for ExternalObjectsDropped was activated");
+                console.log(e);
+            //}
+            sock.send('scene_graph', {data: myDiagram.model.toJson(), txt: "new node"});
+            
+        }
+    ); 
+    
+    // notice when new link is drawn
+    myDiagram.addDiagramListener("LinkDrawn",
+        function(e) {
+            var part = e;
+            //e.subject.parent = 0;
+            //e.subject.children = 0;
+            //socket.send('new_gojs_node', {node: e.subject});
+            //console.log(e);
+            //if(part.id == "nodeDataArray"){
+                console.log("myDiagram.model.ADDCHANGEDLISTENER for LINKDRAWN was activated");
+                console.log(e);
+            //}
+            sock.send('scene_graph', {data: myDiagram.model.toJson(), txt: "new edge"});            
+        }
+    ); 
+    
+    /*
+        NEED TO ADD LISTENERS FOR WHEN THINGS ARE DELETED!
+    */
+    
     // define the Node templates for regular nodes
     var lightText = 'whitesmoke';
     GoJsHelper
@@ -283,10 +323,10 @@ var GoJsHelper = function(diagram)
           "animationManager.duration": 800, // slightly longer than default (600ms) animation
           nodeTemplateMap: myDiagram.nodeTemplateMap,  // share the templates used by myDiagram
           model: new go.GraphLinksModel([  // specify the contents of the Palette
-            { category: "Start", text: "Start", id: "THE_START", "path": "asdf", "lbl": "" },
-            { category: "Subject", text: "Subject", id: "THE_Subject", "path": "asdf", "lbl": ""},
-            { category: "Group", text: "Group", id: "THE_Group", "path": "asdf", "lbl": ""},            
-            { category: "Atlas", id: "Atlas", "path": "asdf", "lbl": ""},
+            { category: "Start", text: "Start", children: [], parents: [], id: "THE_START", "path": "asdf", "lbl": "" },
+            { category: "Subject", text: "Subject", children: [], parents: [], id: "THE_Subject", "path": "asdf", "lbl": ""},
+            { category: "Group", text: "Group", children: [], parents: [], id: "THE_Group", "path": "asdf", "lbl": ""},            
+            { category: "Atlas", id: "Atlas", text: "Atlas", children: [], parents: [], "path": "asdf", "lbl": ""},
           ])
         });
         
@@ -372,13 +412,10 @@ var GoJsHelper = function(diagram)
     
         
       d_gram = myDiagram;
-    
+    socket.send('root_key', {data: this.getRootKey()});
   }
-  // Make all ports on a node visible when the mouse is over the node
-  
+  // Make all ports on a node visible when the mouse is over the node  
   // Show the diagram's model in JSON format that the user may edit
-  
-  
   // add an SVG rendering of the diagram at the end of this page
   
 
@@ -390,8 +427,7 @@ var GoJsHelper = function(diagram)
     }
     
   function updateSceneGraph(scene) {  
-    scene_graph = scene;
-    
+    scene_graph = scene;    
   }
 
   return {
@@ -403,7 +439,7 @@ var GoJsHelper = function(diagram)
     attachToNode : function(node) {
     
     },
-    
+    getRootKey : function(){return -3;},
   };
   
 };

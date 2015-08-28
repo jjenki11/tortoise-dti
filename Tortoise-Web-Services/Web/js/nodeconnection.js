@@ -128,7 +128,11 @@ var nodeConnection = function()
         console.log("YOUR FILE CONTENTS ARE....\n");
         console.log(data);
     });
-    
+    /*
+    socket.on('scene_init', function(data){
+        console.log(data.txt);
+    });
+    */
     socket.on('populate_the_list', function(data){
         var x = getNodeLabel();
         var str ="";

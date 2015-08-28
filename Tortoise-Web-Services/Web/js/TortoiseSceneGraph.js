@@ -1,7 +1,7 @@
-var SceneGraph = function( ) {
+var SceneGraph = function( theSocket ) {
 
 
-
+  var socket = theSocket;
   var graph = {
     _class : '',
     _name  : '',
@@ -19,6 +19,9 @@ var SceneGraph = function( ) {
   var node_map = new HashTable();
   var edge_map = new HashTable();
 
+    socket.attachHandler('scene_init', function(data){
+        console.log('received data in nodeConnection -> ',data);
+    });
 
   var TreeNode = function() {
     var level    = 0;  
@@ -28,6 +31,12 @@ var SceneGraph = function( ) {
     var aRoot = false;
     var aLeaf = false;
     var key = 0;
+    
+    var transformNode = null;
+    var groupNode     = null;
+    var templateNode  = null;
+    var subjectNode   = null;
+    
     return {
           tagAsRoot   : function(bool){
             aRoot = bool;
@@ -82,6 +91,136 @@ var SceneGraph = function( ) {
           },
     };  
   }; 
+  
+  var TemplateNode  = function() {    
+    var avg_template_affines = [];
+    var avg_template_diffeos = [];
+    var groups               = [];
+    var transforms           = [];
+    var rois                 = [];
+    return {
+        addAffine : function(aff){
+            avg_template_affines.push(aff);
+        },
+        addDiffeo : function(dif){
+            avg_template_diffeos.push(dif);
+        },
+        addGroup  : function(g){
+            groups.push(g);
+        },
+        addTransform : function(trans){
+            transforms.push(trans);
+        },
+        addROI       : function(r){
+            rois.push(r);
+        },
+        setGroups : function(g){
+            groups = g;
+        },  
+        setROIs   : function(rs){
+            rois = rs;
+        },
+        getGroups : function(){
+            return groups;
+        },
+        getAffines : function(){
+            return avg_template_affines;
+        },
+        getDiffeos : function(){
+            return avg_template_diffeos;
+        },
+        getTransforms : function(){
+            return transforms;
+        },
+        getROIs       : function(){
+            return rois;
+        },
+    };
+  };
+  
+  var TransformNode = function() {    
+    var affine = null;
+    var deffield = null;
+    var combined_displacement = null;    
+    return {
+        getAffineTransformation : function(){
+            return affine;
+        },
+        getDeffieldTransformation : function(){
+            return deffield;
+        },
+        getCombinedDisplacement : function(){
+            return combined_displacement;
+        },
+        setAffineTransformation : function(trans){
+            affine = trans;
+        },
+        setDeffieldTransformation : function(trans){
+            deffield = trans;
+        },
+        setCombinedDisplacement : function(trans){
+            combined_displacement = trans;
+        },
+    };          
+  };
+  
+  var GroupNode = function() {  
+    var subjects   = [];
+    var transforms = [];
+    var metadata   = {id:null};        
+    return {    
+        addTransformNode : function(node){
+            transforms.push(node);
+        },
+        getTransforms    : function(){
+            return transforms;
+        },
+        setID   : function(ID){
+            metadata.id = ID;
+        },
+        addSubjectNode   : function(node){        
+            subjects.push(node);
+        },
+        getSubjects      : function(){
+            return subjects;
+        },
+        getMetadata   : function(){
+            return metadata;
+        },
+        reset            : function(){
+            metadata   = {id:null};
+            subjects   = [];
+            transforms = [];
+        }    
+    };
+  };
+  
+  var SubjectNode = function() {  
+    var transforms = [];
+    var metadata   = {id:null, group: null};
+    return {
+        addTransformNode : function(node){
+            transforms.push(node);
+        },
+        getTransforms : function(){
+            return transforms;
+        },
+        setID   : function(ID){
+            metadata.id = ID;
+        },
+        setGroup : function(g){
+            metadata.group = g;
+        },
+        getMetadata   : function(){
+            return metadata;
+        },
+        reset         : function(){
+            metadata   = {id:null, group: null};
+            transforms = [];
+        }
+    };    
+  };
+
       
 var Tree = function( ) {  
 
@@ -100,9 +239,17 @@ var Tree = function( ) {
         function insertNode(node)
         {
             if(!theTree.root)
-            {
-                console.log('this is the root');
-                theTree.root = node;
+            {            
+                var d = node.getData();
+                var cat = d.category;
+                if(cat === 'Group')
+                {
+                    console.log('this is the root, a group node');
+                    var gNode = new GroupNode();
+                    gNode.setID(d.id);
+                }
+                
+                theTree.root = node.getData();
                 node.parents = null;
                  
             }
@@ -150,6 +297,10 @@ var Tree = function( ) {
                 parent.addChild(child);
             }
         };
+        
+        function getCategory(data){
+            return data.category;
+        };  
         return {        
             buildTree        : function(graph){                
                 var verts = graph.nodes;
@@ -158,6 +309,7 @@ var Tree = function( ) {
                 // main logic to build a tree
                 for(var i=0;i<verts.length;i++)
                 {
+                    
                     tmpNode = new TreeNode();
                     tmpNode.setData(verts[i]);
                     tmpNode.setKey(tmpNode.getData().key);
@@ -173,8 +325,9 @@ var Tree = function( ) {
                     performNodeUnion(child, parent);                    
                 }  
                 console.log('now we want to traverse...');
+                console.log(theTree);    
                 traverseTree(theTree.nodes[0],0,0);    
-                console.log(theTree);          
+                      
             },
             
             getRootNodes     : function(){
@@ -245,6 +398,7 @@ var Tree = function( ) {
 
   // vestigial function now, can probably use it to initialize graph with existing save file though
   var init = function(data) {  
+    
     console.log(data.nodeDataArray);
     console.log(data.linkDataArray);
     console.log('parsing model');
@@ -259,7 +413,9 @@ var Tree = function( ) {
         path     :    data.path,
         lbl      :    data.lbl,
         key      :    data.key,
-        loc      :    data.loc
+        loc      :    data.loc,
+        parent   :    data.parent,
+        children :    data.children,
     };  
     node_map.setItem(data.key, node);
     console.log('new node added, ',node);
@@ -401,10 +557,13 @@ var Tree = function( ) {
             }
             if(!alreadyAdded)                       {nodes.push(tmp);}
         }
-    }  
+    }
+    
     var x = new Tree();
     console.log('Building a tree from the scene graph');
-    x.buildTree(getSceneGraph());
+    //x.buildTree(getSceneGraph());
+    
+    
     
     return nodes;    
   
@@ -419,6 +578,7 @@ var Tree = function( ) {
     getRootNodes:getRootNodes,
     getTerminalNodes:getTerminalNodes,
     getIsolatedNodes:getIsolatedNodes,
+    getSceneGraph:getSceneGraph,
   };
 
 };

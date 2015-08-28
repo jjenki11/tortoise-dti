@@ -36,6 +36,13 @@ var module = require('module');
     
     
     var ScraperProxy = require('./ScraperProxy.js').ScraperProxy;
+    var SceneGraphProxy = require('./SceneGraphProxy.js').SceneGraphProxy;
+    
+function scene_graph_update(data,socket)
+{
+    console.log('well at least we are in the update function...');
+    SceneGraphProxy.init(data,socket);
+};
     
 function child_scrape(data,socket)
 {
@@ -358,6 +365,12 @@ io.sockets.on('connection', function(socket){
      child_scrape(data, socket);
   
   });
+  
+  socket.on('scene_graph', function(data){
+    console.log('in server...');
+    console.log("Action in SG = ", data.txt);
+    scene_graph_update(data,socket);
+  });   
 
   socket.on('get_csv_file', function(data){
      child_readCSVFile(data,socket);
