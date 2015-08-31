@@ -403,8 +403,11 @@
             console.log(x);
             gojs_helper.updateSceneGraph(x);
             console.log('The root = ',myDiagram);
-            sock.send('scene_graph', {data: myDiagram.model.toJson(), txt: "initialize"});
-            
+            sock.send('scene_graph', {data: myDiagram.model.toJson(), txt: "initialize"});            
+        });
+        $("#update_graph").on('click', function(event, ui) {
+        
+            sock.send('get_scene', {});
         });
         $("#show_graph").on('click', function(event, ui) {
           if($("#plot_chart").is(":visible"))
@@ -796,7 +799,8 @@ $(function() {
         </div>
 <span class="btn btn-default" id="show_derived_values">Show Selected Derived Values</span>
 <span class="btn btn-default" id="get_graph_props">Get Graph Properties</span>
-<span class="btn btn-default" id="show_graph">Show Graph</span>
+<span class="btn btn-default" id="update_graph">update graph</span>
+<span class="btn btn-default" id="show_graph">Show Plot/Graph</span>
 <span class="btn btn-default" id="plot_ROI_data">Plot ROI Data</span>
 
     

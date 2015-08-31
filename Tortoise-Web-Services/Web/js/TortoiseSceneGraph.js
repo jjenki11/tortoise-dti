@@ -23,6 +23,11 @@ var SceneGraph = function( theSocket ) {
         console.log('received data in nodeConnection -> ',data);
     });
 
+  socket.attachHandler('scene_update', function(data){
+        console.log('Type of update -> ',data.txt);
+        printGraph(data.graph);
+  });
+        
   var TreeNode = function() {
     var level    = 0;  
     var children = [];
@@ -349,6 +354,20 @@ var Tree = function( ) {
   
   var i = 0;
   
+  var isInList = function(data, list)
+  {
+    var bool = false;
+    for(var i = 0; i < list.length; i++)
+    {
+        if(list[i] == data)
+        {
+            bool = true;
+        }
+    }
+    return bool;
+  };
+  
+  
   var getSceneGraph = function( )
   {
     return graph;
@@ -389,7 +408,7 @@ var Tree = function( ) {
     }    
     for(var j = 0; j < numEdges; j++)
     {
-        graph.edges.push(sgEdge(edgeJSON[j]));
+        graph.edges.push(sgEdge(edgeJSON[j], true));
         console.log(sgEdge(edgeJSON[j]));
     }    
     console.log('Number of nodes = ',graph.nodes.length);
@@ -414,16 +433,34 @@ var Tree = function( ) {
         lbl      :    data.lbl,
         key      :    data.key,
         loc      :    data.loc,
-        parent   :    data.parent,
-        children :    data.children,
+        parents  :    data.parents || [],
+        children :    data.children || [],
     };  
     node_map.setItem(data.key, node);
     console.log('new node added, ',node);
     return node;
   };
   
-  var sgEdge = function( data ) 
+  var sgEdge = function( data, updated ) 
   {
+    if( updated )
+    {
+        console.log('EDGE  = ');
+        console.log(data);
+         var to   = node_map.getItem(data.to);
+         var from = node_map.getItem(data.from);
+         if( ! isInList( data.to, from.children ))
+         {
+             from.children.push(data.to);
+             node_map.setItem(data.from, from);
+         }
+         if( ! isInList( data.from, to.parents ))
+         {
+             to.parents.push(data.from);        
+             node_map.setItem(data.to, to);    
+         }
+    }
+    
     var edge = {
         fromIndex     : data.from,
         toIndex       : data.to,
@@ -438,6 +475,8 @@ var Tree = function( ) {
     console.log('new edge added, ',edge);
     return edge;
   };
+  
+
   
   var printGraph = function( )
   {
@@ -574,6 +613,7 @@ var Tree = function( ) {
     attachWorkerNode: attachWorkerNode,
     JSONToSceneGraph: JSONToSceneGraph,
     SceneGraphToJSON: SceneGraphToJSON,
+    isInList:isInList,
     printGraph: printGraph,
     getRootNodes:getRootNodes,
     getTerminalNodes:getTerminalNodes,

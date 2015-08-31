@@ -15,6 +15,11 @@ var GoJsHelper = function(diagram,socket)
   
   var init = function(diagram,socket) {
     
+    
+    socket.attachHandler('scene_update', function(data) {        
+        updateSceneGraph(data.graph);
+    });
+    
     if (window.goSamples) goSamples();  // init for these samples -- you don't need to call this
     $go = go.GraphObject.make;  // for conciseness in defining templates
     myDiagram =

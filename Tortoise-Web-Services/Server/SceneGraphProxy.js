@@ -475,6 +475,19 @@ var SceneGraphProxy =
     return graph;
   },
   
+  isInList : function(data, list)
+  {
+    var bool = false;
+    for(var i = 0; i < list.length; i++)
+    {
+        if(list[i] == data)
+        {
+            bool = true;
+        }
+    }
+    return bool;
+  },
+  
   SceneGraphToJSON : function( )
   {
     return {    
@@ -513,7 +526,8 @@ var SceneGraphProxy =
     {
         graph.edges.push(this.sgEdge(edgeJSON[j],update));
         //console.log(this.sgEdge(edgeJSON[j]));
-    }    
+    }        
+    socket.emit('scene_update', {graph: this.SceneGraphToJSON(graph)});        
     console.log('Number of nodes = ',graph.nodes.length);
     console.log('Number of edges = ',graph.edges.length);   
   },
@@ -545,14 +559,23 @@ var SceneGraphProxy =
   
   sgEdge : function( data, updated ) 
   {
-    if(updated){
-        var from = node_map.getItem(data.from);
-        from.children.push(data.from);        
-        var to   = node_map.getItem(data.to);
-        to.parents.push(data.to);            
-        node_map.setItem(data.from, from);
-        node_map.setItem(data.to, to);
-     }
+    if( updated )
+    {
+        console.log('EDGE  = ');
+        console.log(data);
+         var to   = node_map.getItem(data.to);
+         var from = node_map.getItem(data.from);
+         if( ! this.isInList( data.to, from.children ))
+         {
+             from.children.push(data.to);
+             node_map.setItem(data.from, from);
+         }
+         if( ! this.isInList( data.from, to.parents ))
+         {
+             to.parents.push(data.from);        
+             node_map.setItem(data.to, to);    
+         }
+    }
     
     var edge = {
         fromIndex     : data.from,
@@ -667,33 +690,37 @@ var SceneGraphProxy =
 
   init     : function(graph, sock) {
     socket = sock;
+    
     console.log('yay in the proxy');
-    var x;
-    //console.log(sGraph);
+    var x = new Tree();
     switch(graph.txt){
     
         case 'new edge' : 
             console.log('NEW EDGINGTON');
             sGraph = this.JSONToSceneGraph(graph.data,true);
+            sock.emit('scene_update', {txt: 'new edge added', data: this.SceneGraphToJSON(sGraph)});         
+               
             break;
         case 'new node' : 
             console.log('NEW NODINGTON');
             sGraph = this.JSONToSceneGraph(graph.data,false);
+            sock.emit('scene_update', {txt: 'new edge added', data: this.SceneGraphToJSON(sGraph)});         
             break;
         case 'initialize' : 
             console.log('NEW GRAPHINGTON');
             sGraph = this.JSONToSceneGraph(graph.data,false);
+            sock.emit('scene_init', {txt: 'Scene graph initialized on server'});
             break;
         default  :
             console.log('unsure');
             break;
     }
-    var x = new Tree();
+    
     console.log('Building a tree from the scene graph');
     x.buildTree(this.getSceneGraph());
-    sock.emit('scene_init', {txt: 'Scene graph initialized on server'});
-
-    this.printGraph();
+   
+    
+    //this.printGraph();
   },
 
 };
