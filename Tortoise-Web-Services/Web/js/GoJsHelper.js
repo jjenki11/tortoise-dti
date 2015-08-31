@@ -411,10 +411,6 @@ var GoJsHelper = function(diagram,socket)
       document.getElementById("mySavedModel").value = JSON.stringify($go("myDiagram"));//myDiagram.model.toJson();
       myDiagram.isModified = true;
     }
-    
-    
-    
-    
         
       d_gram = myDiagram;
     socket.send('root_key', {data: this.getRootKey()});
