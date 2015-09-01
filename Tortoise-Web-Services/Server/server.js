@@ -12,7 +12,6 @@ var module = require('module');
 
  var childProcess = require('child_process'),
      ls,
-     rf,
      ct,
      cp,
      rb,
@@ -38,10 +37,17 @@ var module = require('module');
     var ScraperProxy = require('./ScraperProxy.js').ScraperProxy;
     var SceneGraphProxy = require('./SceneGraphProxy.js').SceneGraphProxy;
     
+    var TortoiseProxy = require('./TortoiseProxy.js').TortoiseProxy;
+    
 function scene_graph_init(data,socket)
 {
     console.log('well at least we are in the init function...');
     SceneGraphProxy.init(data,socket);
+};
+function scene_graph_update(data)
+{
+    console.log('well at least we are in the update function...');
+    SceneGraphProxy.update(data);
 };
 
 function child_scrape(data,socket)
@@ -67,47 +73,8 @@ function child_ls(dir)
 
 var current_category = null;
 
-function child_readFile(file, category)
-{
-  rf = childProcess.exec('cat '+ProjectName+'/'+file, function (error, stdout, stderr) {
-   if (error) {
-     console.log(error.stack);
-     console.log('Error code: '+error.code);
-     console.log('Signal received: '+error.signal);
-   }
-   console.log('Child Process STDOUT: '+stdout);
-   console.log('Child Process STDERR: '+stderr);
-    current_category = category;
-    switch(current_category)
-    {
-        case 'control' :
-            control_subjects = [];
-            control_subjects = stdout.split('\n');
-            //control_subjects.push(stdout+'\n');
-            break;
-        case 'patient' :
-            patient_subjects = [];
-            patient_subjects = stdout.split('\n');
-            //patient_subjects.push(stdout+'\n');
-            break;
-        case 'atlas'   :
-            atlas_subjects = [];
-            atlas_subjects = stdout.split('\n');
-            //atlas_subjects.push(stdout+'\n');
-            break;
-        case 'csv'     :
-            
-            break;
-        default        :
-            console.log('unknown category.');
-    }
-    
- });
 
- rf.on('exit', function (code) {
-   console.log('Child process exited with exit code '+code);
- });
-};
+
 
 function child_readCSVFile(data,socket)
 {
@@ -294,7 +261,7 @@ io.sockets.on('connection', function(socket){
   socket.emit('success', 'Server heard your request.');
   
 
-  
+  console.log("Project path = ",ProjectPath);
   console.log("CORE LIBS PATH = ",project.getCoreDirName());
   
   socket.on('disconnect', function(){
@@ -317,22 +284,14 @@ io.sockets.on('connection', function(socket){
     console.log(data.txt+" IN MY ATLAS");
   });
   
-  socket.on('new_project', function(data){
-    
-    
+  socket.on('new_project', function(data){    
     var cre8Path = ProjectPath + '/Projects/' + data.project_name + '/';
     console.log('project path = '+cre8Path);
     ProjectName  = cre8Path;
     console.log('user email   = '+data.user_email);
     child_createProject(data);
   });
-  /*
-  socket.on('get_file', function(data){
-    console.log("YOU WANT THE FILE ==>> "+data.txt);
-   //child_ls("/home/jeff/Desktop/development/NIH/new_tortoise/Tortoise-Web-Services/Web/img");
-    child_readFile("/stbb_home/jenkinsjc/Desktop/new_tortoiseDti/Tortoise-Web-Services/Web/README.txt");
-  });
-  */
+  
   socket.on('combine_xform', function(data){  
     child_CombineTransformations(data);  
   });
@@ -354,10 +313,36 @@ io.sockets.on('connection', function(socket){
   socket.on('read_list_file', function(data){
   
     console.log('reading list file...');
-    
-    child_readFile(data.path, data.cat);
-   //"/stbb_home/jenkinsjc/Desktop/new_tortoiseDti/Tortoise-Web-Services/Web/README.txt");
-      // socket.emit('file_contents', x);
+    var c = data.cat;
+    TortoiseProxy.child_readFile(data.path, data.cat, 
+      function(datat)
+      {      
+        current_category = c;
+        switch(current_category)
+        {
+            case 'control' :
+                control_subjects = [];
+                control_subjects = datat.split('\n');
+                //control_subjects.push(stdout+'\n');
+                break;
+            case 'patient' :
+                patient_subjects = [];
+                patient_subjects = datat.split('\n');
+                //patient_subjects.push(stdout+'\n');
+                break;
+            case 'atlas'   :
+                atlas_subjects = [];
+                atlas_subjects = datat.split('\n');
+                //atlas_subjects.push(stdout+'\n');
+                break;
+            case 'csv'     :
+                
+                break;
+            default        :
+                console.log('unknown category.');
+        }
+      }
+    );
   });
   
   socket.on('monitor_progress', function(data){
@@ -369,7 +354,15 @@ io.sockets.on('connection', function(socket){
   socket.on('scene_graph', function(data){
         console.log('in server...');
         console.log("Action in SG = ", data.txt);
-        scene_graph_init(data,socket);
+        if(data.txt == "initialize")
+        {
+          scene_graph_init(data,socket);
+        }
+        if(data.txt == "update")
+        {
+          scene_graph_update(data);
+        }
+        
   });   
 
   socket.on('get_csv_file', function(data){

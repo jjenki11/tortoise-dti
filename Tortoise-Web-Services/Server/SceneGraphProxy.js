@@ -1,5 +1,9 @@
 // This is a proxy to mirror the scene graph constructed in the browser to manage transformation stuff.
 
+
+var tree;
+
+
 var path = "";
 var project_path;
 /*
@@ -22,12 +26,7 @@ var i = 0;
     nodes: [],
     edges: []
   };
-  
-  var theTree = {
-    root  : null,
-    nodes : [],
-  };
-  
+
     function HashTable(obj)
     {
         this.length = 0;
@@ -111,368 +110,31 @@ var i = 0;
   var node_map = new HashTable();
   var edge_map = new HashTable();
 
-  var TemplateNode = function() {    
-    var avg_template_affines = [];
-    var avg_template_diffeos = [];
-    var groups               = [];
-    var transforms           = [];
-    var rois                 = [];
-    return {
-        addAffine : function(aff){
-            avg_template_affines.push(aff);
-        },
-        addDiffeo : function(dif){
-            avg_template_diffeos.push(dif);
-        },
-        addGroup  : function(g){
-            groups.push(g);
-        },
-        addTransform : function(trans){
-            transforms.push(trans);
-        },
-        addROI       : function(r){
-            rois.push(r);
-        },
-        setGroups : function(g){
-            groups = g;
-        },  
-        setROIs   : function(rs){
-            rois = rs;
-        },
-        getGroups : function(){
-            return groups;
-        },
-        getAffines : function(){
-            return avg_template_affines;
-        },
-        getDiffeos : function(){
-            return avg_template_diffeos;
-        },
-        getTransforms : function(){
-            return transforms;
-        },
-        getROIs       : function(){
-            return rois;
-        },
-    };
-  };
-  
-  var TransformNode = function() {    
-    var affine = null;
-    var deffield = null;
-    var combined_displacement = null;    
-    return {
-        getAffineTransformation : function(){
-            return affine;
-        },
-        getDeffieldTransformation : function(){
-            return deffield;
-        },
-        getCombinedDisplacement : function(){
-            return combined_displacement;
-        },
-        setAffineTransformation : function(trans){
-            affine = trans;
-        },
-        setDeffieldTransformation : function(trans){
-            deffield = trans;
-        },
-        setCombinedDisplacement : function(trans){
-            combined_displacement = trans;
-        },
-    };          
-  };
-  
-  var GroupNode = function() {  
-    var subjects   = [];
-    var transforms = [];
-    var metadata   = {id:null};        
-    return {    
-        addTransformNode : function(node){
-            transforms.push(node);
-        },
-        getTransforms    : function(){
-            return transforms;
-        },
-        setID   : function(ID){
-            metadata.id = ID;
-        },
-        addSubjectNode   : function(node){        
-            subjects.push(node);
-        },
-        getSubjects      : function(){
-            return subjects;
-        },
-        getMetadata   : function(){
-            return metadata;
-        },
-        reset            : function(){
-            metadata   = {id:null};
-            subjects   = [];
-            transforms = [];
-        }    
-    };
-  };
-  
-  var SubjectNode = function() {  
-    var transforms = [];
-    var metadata   = {id:null, group: null};
-    return {
-        addTransformNode : function(node){
-            transforms.push(node);
-        },
-        getTransforms : function(){
-            return transforms;
-        },
-        setID   : function(ID){
-            metadata.id = ID;
-        },
-        setGroup : function(g){
-            metadata.group = g;
-        },
-        getMetadata   : function(){
-            return metadata;
-        },
-        reset         : function(){
-            metadata   = {id:null, group: null};
-            transforms = [];
-        }        
-    };   
-  };
 
-  
-  
-  var TreeNode = function() {
-    var level    = 0;  
-    var children = [];
-    var parents = [];
-    var data = {};
-    var aRoot = false;
-    var aLeaf = false;
-    var key = 0;
-    
-    var transformNode = null;
-    var groupNode     = null;
-    var templateNode  = null;
-    var subjectNode   = null;
-    
-    return {
-          tagAsRoot   : function(bool){
-            aRoot = bool;
-          },
-          tagAsLeaf   : function(bool){
-            aLeaf = bool;
-          },
-          setData     : function(dataIn){
-            data = dataIn;
-          },
-          setLevel    : function(dataIn){
-            level = dataIn;
-          },
-          setKey      : function(dataIn){
-            key = dataIn;
-          },
-          addChild    : function(dataIn){
-            children.push(dataIn);
-            aLeaf = false;        
-          },
-          addParent   : function(dataIn){
-            parents.push(dataIn);
-            this.tagAsRoot(false);
-          },
-          removeChildren : function(){
-            children = [];
-            tagAsLeaf(true);
-          },
-          getChildren : function(){
-            return children;
-          },
-          getParents  : function(){
-            return parents;
-          },
-          getData     : function(){
-            return data;
-          },    
-          getLevel    : function(){
-            return level;
-          },
-          getKey      : function(){
-            return key;
-          },
-          isRoot      : function(){
-            return aRoot;
-          },
-          isLeaf      : function(){
-            return aLeaf;
-          },
-          print       : function(){
-            console.log(data);
-          },
-    };  
-  };
-  
-
-  var Tree = function( ) {  
-
-        function findNode(key)
-        {
-            for(var i = 0; i < theTree.nodes.length; i++)
-            {
-                console.log('comparing tree node having key = ',theTree.nodes[i].key,' with key argument = ',key);
-                if(theTree.nodes[i].key === key)
-                {
-                    return theTree.nodes[i];
-                }
-            }
-            return null;
-        };
-        function insertNode(node)
-        {
-            if(!theTree.root)
-            {            
-                var d = node.getData();
-                var cat = d.category;
-                if(cat === 'Group')
-                {
-                    console.log('this is the root, a group node');
-                    var gNode = new GroupNode();
-                    gNode.setID(d.id);
-                }
-                
-                theTree.root = node.getData();
-                node.parents = null;
-                 
-            }
-            else
-            {
-                
-            }
-            theTree.nodes.push(node);  
-        };
-        
-        function performNodeUnion(child, parent)
-        {
-            if(!child) {
-                console.log('child is null for parent ',parent);
-            }
-            else {
-                child.addParent(parent);
-            }
-            if(!parent) {
-                console.log('parent is null for child ',child);
-            }
-            else {
-                parent.addChild(child);
-            }
-        };
-        
-        function getCategory(data)
-        {
-            return data.category;
-        };  
-        
-        
-        return {        
-            buildTree        : function(graph){                
-                var verts = graph.nodes;
-                var edges = graph.edges;
-                var tmpNode;
-                // main logic to build a tree
-                for(var i=0;i<verts.length;i++)
-                {
-                    tmpNode = new TreeNode();
-                    tmpNode.setData(verts[i]);
-                    tmpNode.setKey(tmpNode.getData().key);
-                    tmpNode.print();
-                    insertNode(tmpNode);
-                }     
-                for(var i=0;i<edges.length;i++)
-                {
-                    var child  = findNode(edges[i].fromIndex);
-                    var parent = findNode(edges[i].toIndex);
-                    console.log('toIndex = ',edges[i].toIndex);
-                    console.log('fromIndex = ',edges[i].fromIndex);
-                    //performNodeUnion(child, parent);                    
-                }  
-                console.log('now we want to traverse...');
-                theTree.nodes = verts;
-                //console.log(theTree);    
-                this.traverseTree(theTree.nodes[0],0,0);       
-                               
-            },            
-            getRootNodes     : function(){
-                var dNodes = theTree.nodes;
-                var roots = [];
-                console.log('in the tree one...');
-                for(var i = 0; i < dNodes.length; i++)
-                {
-                    if((dNodes[i].children.length != 0 ) && (dNodes[i].parents.length == 0))
-                    {
-                        roots.push(dNodes[i]);
-                    }
-                }            
-                theTree.root = roots;    
-                return roots;
-            },
-            getLeafNodes     : function(){
-                var dNodes = theTree.nodes;
-                var leaves = [];
-                for(var i = 0; i < dNodes.length; i++)
-                {
-                    if((dNodes[i].children.length) == 0 && (dNodes[i].parents.length != 0))
-                    {
-                        leaves.push(dNodes[i]);
-                    }
-                }                
-                return leaves;
-            },
-            getIsolatedNodes : function(){
-                var dNodes = theTree.nodes;
-                var lonelies = [];
-                for(var i = 0; i < dNodes.length; i++)
-                {
-                    if((dNodes[i].children.length == 0) && (dNodes[i].parents.length == 0))
-                    {
-                        lonelies.push(dNodes[i]);
-                    }
-                }                
-                return lonelies;
-            },
-            getInteriorNodes : function(){
-                var dNodes = theTree.nodes;
-                var lonelies = [];
-                for(var i = 0; i < dNodes.length; i++)
-                {
-                    if((dNodes[i].children.length != 0) && (dNodes[i].parents.length != 0))
-                    {
-                        lonelies.push(dNodes[i]);
-                    }
-                }                
-                return lonelies;
-            },
-            getTree          : function(){
-                return theTree;
-            },
-            traverseTree     : function(dataIn,i,j) 
-            {               
-                console.log('Root nodes     -> ',this.getRootNodes());
-                console.log('Leaf nodes     -> ',this.getLeafNodes());
-                console.log('Isolated nodes -> ',this.getIsolatedNodes());
-                console.log('Interior nodes -> ',this.getInteriorNodes());
-            },
-        
-        };
-  };
 
 
 
 var SceneGraphProxy = 
 { 
     /* Graph representation */
+    
   
   getSceneGraph : function( )
   {
     return graph;
+  },
+  
+  InvertGraph : function( )
+  {
+    var inv_graph = this.getSceneGraph();
+    var old_graph = this.getSceneGraph();
+    
+    
+    var X = require('./AssetTreeProxy.js').AssetTreeProxy();
+    
+    var verts = old_graph.nodes;
+    var edges = old_graph.edges;    
+    
   },
   
   isInList : function(data, list)
@@ -525,11 +187,12 @@ var SceneGraphProxy =
     for(var j = 0; j < numEdges; j++)
     {
         graph.edges.push(this.sgEdge(edgeJSON[j],update));
-        //console.log(this.sgEdge(edgeJSON[j]));
-    }        
+    }    
+    
     socket.emit('scene_update', {graph: this.SceneGraphToJSON(graph)});        
     console.log('Number of nodes = ',graph.nodes.length);
     console.log('Number of edges = ',graph.edges.length);   
+    return graph;
   },
 
   // vestigial function now, can probably use it to initialize graph with existing save file though
@@ -692,21 +355,34 @@ var SceneGraphProxy =
     socket = sock;
     
     console.log('yay in the proxy');
-    var x = new Tree();
+    
     switch(graph.txt){
     
         case 'new edge' : 
             console.log('NEW EDGINGTON');
             sGraph = this.JSONToSceneGraph(graph.data,true);
             sock.emit('scene_update', {txt: 'new edge added', data: this.SceneGraphToJSON(sGraph)});         
-               
+            console.log('Building a tree from the scene graph');
+            tree.updateTree(this.getSceneGraph());
             break;
         case 'new node' : 
             console.log('NEW NODINGTON');
             sGraph = this.JSONToSceneGraph(graph.data,false);
-            sock.emit('scene_update', {txt: 'new edge added', data: this.SceneGraphToJSON(sGraph)});         
+            sock.emit('scene_update', {txt: 'new edge added', data: this.SceneGraphToJSON(sGraph)});     
+            tree.updateTree(this.getSceneGraph());    
+            break;
+        case 'deleted' : 
+            console.log('NEW EDGINGTON');
+            sGraph = this.JSONToSceneGraph(graph.data,false);   
+                console.log('Building a tree from the scene graph');
+            tree.traverseInReverse(tree.getRootNodes()[0].key, '');
+            //tree.updateTree(this.JSONToSceneGraph(graph.data,false));
+            sock.emit('scene_update', {txt: 'something was deleted', data: this.SceneGraphToJSON(sGraph)}); 
+            tree.updateTree(this.getSceneGraph());
+            tree.traverseTree();
             break;
         case 'initialize' : 
+          tree = require('./AssetTreeProxy.js').AssetTreeProxy();
             console.log('NEW GRAPHINGTON');
             sGraph = this.JSONToSceneGraph(graph.data,false);
             sock.emit('scene_init', {txt: 'Scene graph initialized on server'});
@@ -714,14 +390,18 @@ var SceneGraphProxy =
         default  :
             console.log('unsure');
             break;
-    }
-    
+    }    
     console.log('Building a tree from the scene graph');
-    x.buildTree(this.getSceneGraph());
-   
-    
-    //this.printGraph();
+    tree.buildTree(this.getSceneGraph());
+    tree.traverseTree();
+    tree.traverseInReverse(tree.getRootNodes()[0].key, '');
   },
+  update    : function(graph) {
+    sGraph = this.JSONToSceneGraph(graph.data,false);
+    console.log('updated', sGraph);
+    socket.emit('scene_init', {txt: 'Scene graph updated on server'});
+    tree.updateTree(this.getSceneGraph());
+  }
 
 };
 

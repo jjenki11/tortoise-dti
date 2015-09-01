@@ -406,8 +406,15 @@
             sock.send('scene_graph', {data: myDiagram.model.toJson(), txt: "initialize"});            
         });
         $("#update_graph").on('click', function(event, ui) {
-        
-            sock.send('get_scene', {});
+            console.log(myDiagram.model.toJson());
+            sg.JSONToSceneGraph(myDiagram.model);
+            sg.printGraph();
+            var x = sg.SceneGraphToJSON();
+            
+            console.log('YAYYYY');
+            console.log(x);
+            gojs_helper.updateSceneGraph(x);
+            sock.send('scene_graph', {data: myDiagram.model.toJson(), txt: "update"});  
         });
         $("#show_graph").on('click', function(event, ui) {
           if($("#plot_chart").is(":visible"))

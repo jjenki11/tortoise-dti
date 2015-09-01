@@ -187,6 +187,14 @@ var GoJsHelper = function(diagram,socket)
         NEED TO ADD LISTENERS FOR WHEN THINGS ARE DELETED!
     */
     
+    myDiagram.addDiagramListener("SelectionDeleted",
+      function(e) {
+        console.log("myDiagram.model.SELECTIONDELETED activated");
+        console.log(e);
+        sock.send('scene_graph', {data: myDiagram.model.toJson(), txt: "deleted"});
+      }
+    );
+    
     // define the Node templates for regular nodes
     var lightText = 'whitesmoke';
     GoJsHelper
