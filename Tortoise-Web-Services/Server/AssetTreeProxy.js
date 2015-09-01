@@ -320,10 +320,13 @@
                 console.log('in the tree one...', dNodes);
                 for(var i = 0; i < dNodes.length; i++)
                 {
+                  if(dNodes[i].children)
+                  {
                     if((dNodes[i].children.length != 0 ) && (dNodes[i].parents.length == 0))
                     {
                         roots.push(dNodes[i]);
                     }
+                  }
                 }            
                 root = roots;    
                 return roots;
@@ -333,10 +336,13 @@
                 var leaves = [];
                 for(var i = 0; i < dNodes.length; i++)
                 {
+                  if(dNodes[i].children)
+                  {
                     if((dNodes[i].children.length) == 0 && (dNodes[i].parents.length != 0))
                     {
                         leaves.push(dNodes[i]);
                     }
+                  }
                 }                
                 return leaves;
             },
@@ -345,10 +351,13 @@
                 var lonelies = [];
                 for(var i = 0; i < dNodes.length; i++)
                 {
+                  if(dNodes[i].children)
+                  {
                     if((dNodes[i].children.length == 0) && (dNodes[i].parents.length == 0))
                     {
                         lonelies.push(dNodes[i]);
                     }
+                  }
                 }                
                 return lonelies;
             },
@@ -357,10 +366,13 @@
                 var interiors = [];
                 for(var i = 0; i < dNodes.length; i++)
                 {
+                  if(dNodes[i].children)
+                  {
                     if((dNodes[i].children.length != 0) && (dNodes[i].parents.length != 0))
                     {
                         interiors.push(dNodes[i]);
                     }
+                  }
                 }                
                 return interiors;
             },
@@ -536,9 +548,10 @@
                 console.log('now we want to traverse...');
                 nodes = verts;
                 //edges = tmpEdges;
+                /*
                 this.traverseTree(nodes[0].key,0,0);    
                   var t = this.traverseInReverse(nodes[0].key, '');
-                  this.aggregateTransforms(t.reverse());                 
+                  this.aggregateTransforms(t.reverse());  */               
             },
             printTransforms : function(){
             

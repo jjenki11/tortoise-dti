@@ -397,10 +397,20 @@ var SceneGraphProxy =
     tree.traverseInReverse(tree.getRootNodes()[0].key, '');
   },
   update    : function(graph) {
-    sGraph = this.JSONToSceneGraph(graph.data,false);
+              tree = require('./AssetTreeProxy.js').AssetTreeProxy();
+            console.log('UPDATED GRAPHINGTON');
+            sGraph = this.JSONToSceneGraph(graph.data,false);
     console.log('updated', sGraph);
     socket.emit('scene_init', {txt: 'Scene graph updated on server'});
-    tree.updateTree(this.getSceneGraph());
+    console.log('Building a tree from the scene graph');
+    tree.buildTree(this.getSceneGraph());
+    tree.traverseTree();
+    tree.traverseInReverse(tree.getRootNodes()[0].key, '');
+    tree.traverseTree(tree.getRootNodes()[0].key,0,0);    
+                  var t = tree.traverseInReverse(tree.getRootNodes()[0].key, '');
+                var x =   tree.aggregateTransforms(t.reverse());      
+                console.log('updated transform list = ',x);
+   //tree.updateTree(this.getSceneGraph());
   }
 
 };
