@@ -12,6 +12,8 @@ var GoJsHelper = function(diagram,socket)
     var $go;
     
     var scene_graph;
+    
+    var current_selection;
   
   var init = function(diagram,socket) {
     
@@ -60,6 +62,9 @@ var GoJsHelper = function(diagram,socket)
           console.log("TREE ROOT ID = ", part.findTreeRoot().data.key);
           console.log("Parents   => "+part.data.parents);
           console.log("Children   => "+part.data.children);
+          
+          
+          current_selection = part.data.id;
           
           if(part.data.id === "THE_APPLY_DTIREG")
           {
@@ -116,7 +121,8 @@ var GoJsHelper = function(diagram,socket)
           console.log("Category => "+part.data.category);
           console.log("Value => "+part.data.text);
           console.log("ID       => "+part.data.id);
-          console.log("PART ->>> ", part);          
+          console.log("PART ->>> ", part);    
+          current_selection = part.data.id;      
           if(part.data.id === "THE_APPLY_DTIREG")
           {
             console.log("RIGHT CLICK OCCURED");            
@@ -448,6 +454,7 @@ var GoJsHelper = function(diagram,socket)
     attachToNode : function(node) {
     
     },
+    getCurrentSelection: function(){return current_selection;},
     getRootKey : function(){return -3;},
   };
   

@@ -34,7 +34,7 @@ var module = require('module');
     var ProjectName;//  = project.getProjectName();
     
     
-    var ScraperProxy = require('./ScraperProxy.js').ScraperProxy;
+    
     var SceneGraphProxy = require('./SceneGraphProxy.js').SceneGraphProxy;
     
     var TortoiseProxy = require('./TortoiseProxy.js').TortoiseProxy;
@@ -49,10 +49,31 @@ function scene_graph_update(data)
     console.log('well at least we are in the update function...');
     SceneGraphProxy.update(data);
 };
+function scene_graph_execute(data)
+{
+    console.log('we are in the execute function...');    
+    SceneGraphProxy.update(data);
+    var groups = SceneGraphProxy.getGroupNodeIDs();
+    
+    console.log(groups);
+    var atlases = SceneGraphProxy.getAtlasNodeIDs();
+    console.log(atlases);
+    
+    create_folder_list(groups);
+    
+    
+};
+
+function create_folder_list(list)
+{
+    child_createProject({project_name: ProjectName, folderArgs: list});
+}
 
 function child_scrape(data,socket)
 {
-  ScraperProxy.ScrapeDirForFiles(data, socket, ProjectName, CoreLibsPath);
+    var ScraperProxy = require('./ScraperProxy.js').ScraperProxy;
+    ScraperProxy.ScrapeDirForFiles(data, socket, ProjectName, CoreLibsPath);
+    
 };
 
 function child_ls(dir)
@@ -72,8 +93,6 @@ function child_ls(dir)
 };
 
 var current_category = null;
-
-
 
 
 function child_readCSVFile(data,socket)
@@ -136,7 +155,7 @@ function child_CreateTemplate(data)
     console.log(ProjectName+data.path);
     // the 'y' is for yes!
     //  this fixes image mismatch due to mipav dropping a slice
-    create_template = childProcess.exec('cd '+ data.exec_path+' && /raid1b/STBBapps/DTIREG/bin/dtireg_create_template_jeff '+ProjectName+data.path+' '+data.step+' '+data.exec_path+' < '+ProjectName+"/answer_yes.txt", function(error, stdout, stderr) {
+    create_template = childProcess.exec('cd '+ data.exec_path+' && /raid1b/STBBapps/DTIREG/bin/dtireg_create_template_jeff '+ProjectName+data.path+' '+data.step+' '+data.exec_path+' < '+ProjectName+"answer_file.txt &", function(error, stdout, stderr) {
     if(error){
      console.log(error.stack);
      console.log('Error code: '+error.code);
@@ -208,9 +227,7 @@ function child_GetXformFiles(data)
 
 function child_RegAndCombine(data)
 {
-
-  // raw path ->  /stbb_home/jenkinsjc/Desktop/new_tortoiseDti/Tortoise-Web-Services/Server/Projects/dti_data/
-    
+  // raw path ->  /stbb_home/jenkinsjc/Desktop/new_tortoiseDti/Tortoise-Web-Services/Server/Projects/dti_data/    
     console.log('INSIDE REGANDCOMBINE '+data);
     rag = childProcess.exec(CoreLibsPath+'/reg_and_combine.sh '+ProjectName+data.working_path+' '+data.label_src+' '+data.label_tgt+' '+ProjectName+data.base_path+' '+CoreLibsPath, function(error, stdout, stderr) {
     if(error){
@@ -227,35 +244,43 @@ function child_RegAndCombine(data)
 
 };
 
-
 function child_createProject(data)
 {
     console.log('INSIDE createProject '+data);
-    cp = childProcess.exec('./create_project.sh '+data.project_name, function(error, stdout, stderr) {
-    if(error){
-     console.log(error.stack);
-     console.log('Error code: '+error.code);
-     console.log('Signal received: '+error.signal);
-   }
-   console.log('Child Process STDOUT: '+stdout);
-   console.log('Child Process STDERR: '+stderr);
- });
-  cp.on('exit', function (code) {
-   console.log('Child process create template exited with exit code '+code);
- });
-
+    if(data.folderArgs){
+        cp = childProcess.exec('./create_project.sh '+data.project_name+ ' '+data.folderArgs, function(error, stdout, stderr) {        
+        if(error){
+         console.log(error.stack);
+         console.log('Error code: '+error.code);
+         console.log('Signal received: '+error.signal);
+       }
+       console.log('Child Process STDOUT: '+stdout);
+       console.log('Child Process STDERR: '+stderr);
+     });
+      cp.on('exit', function (code) {
+       console.log('Child process create template exited with exit code '+code);
+     });
+    }
+    else{
+        cp = childProcess.exec('./create_project.sh '+data.project_name, function(error, stdout, stderr) {        
+        if(error){
+         console.log(error.stack);
+         console.log('Error code: '+error.code);
+         console.log('Signal received: '+error.signal);
+       }
+       console.log('Child Process STDOUT: '+stdout);
+       console.log('Child Process STDERR: '+stderr);
+     });
+      cp.on('exit', function (code) {
+       console.log('Child process create template exited with exit code '+code);
+     });
+ }
 };
-
-
-
-
-
 
 io.sockets.on('connection', function(socket){
   
   var initial = true;
-  var watch;
-    
+  var watch;    
   
   console.log('connection started');
   socket.emit('success', 'Server heard your request.');
@@ -314,6 +339,7 @@ io.sockets.on('connection', function(socket){
   
     console.log('reading list file...');
     var c = data.cat;
+    
     TortoiseProxy.child_readFile(data.path, data.cat, 
       function(datat)
       {      
@@ -323,17 +349,14 @@ io.sockets.on('connection', function(socket){
             case 'control' :
                 control_subjects = [];
                 control_subjects = datat.split('\n');
-                //control_subjects.push(stdout+'\n');
                 break;
             case 'patient' :
                 patient_subjects = [];
                 patient_subjects = datat.split('\n');
-                //patient_subjects.push(stdout+'\n');
                 break;
             case 'atlas'   :
                 atlas_subjects = [];
                 atlas_subjects = datat.split('\n');
-                //atlas_subjects.push(stdout+'\n');
                 break;
             case 'csv'     :
                 
@@ -341,13 +364,32 @@ io.sockets.on('connection', function(socket){
             default        :
                 console.log('unknown category.');
         }
+        
+        var x = TortoiseProxy.getSubjectDataByGroup(data.id);
+        if(!x)
+        {
+            TortoiseProxy.addSubjectData({id: data.id, data: datat.split('\n')});
+            console.log('data added');
+            console.log('printing subjects by id: ',data.id,' -> ',TortoiseProxy.getSubjectDataByGroup(data.id));
+        }
+        else
+        {
+            TortoiseProxy.setSubjectData({id: data.id, data: datat.split('\n')});
+        }
+        
       }
     );
   });
   
   socket.on('monitor_progress', function(data){
-    
-     child_scrape(data, socket);
+     console.log('prior to scrapage!!!!!!!!!!!!!!!');
+     child_scrape(data, socket, function(cbData){
+     
+        console.log('DONE');
+        console.log(cbData);
+        
+     });
+     console.log('returned from scrapage!!!!!!!!!!!!!!!!!!');
   
   });
   
@@ -356,13 +398,16 @@ io.sockets.on('connection', function(socket){
         console.log("Action in SG = ", data.txt);
         if(data.txt == "initialize")
         {
-          scene_graph_init(data,socket);
+            scene_graph_init(data,socket);
         }
         if(data.txt == "update")
         {
-          scene_graph_update(data);
+            scene_graph_update(data);
         }
-        
+        if(data.txt == "execute")
+        {
+            scene_graph_execute(data);
+        }        
   });   
 
   socket.on('get_csv_file', function(data){
@@ -423,7 +468,8 @@ io.sockets.on('connection', function(socket){
   });
   
   socket.on('populate_list', function(data){
-   
+    console.log(data);
+    
     switch(current_category)
     {
         case 'control' :
@@ -437,17 +483,16 @@ io.sockets.on('connection', function(socket){
         case 'atlas' :
              console.log('populate my list', atlas_subjects);
             socket.emit('populate_the_list', atlas_subjects);
-            break
+            break;
         default :
             console.log('you ain\'t populatin\' anything varmint');
-            
     }   
-//    socket.emit('populate_the_list', subjects);
   });
   
   socket.on('roi_business', function(data){
     console.log('roi business commencing');
     child_ROIBusiness(data);
   });
+  
   
 });

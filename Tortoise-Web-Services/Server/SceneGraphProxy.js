@@ -411,7 +411,31 @@ var SceneGraphProxy =
                 var x =   tree.aggregateTransforms(t.reverse());      
                 console.log('updated transform list = ',x);
    //tree.updateTree(this.getSceneGraph());
-  }
+  },
+  getGraph : function(){
+  
+    return this.getSceneGraph();
+  },
+  getGroupNodeIDs : function(){
+    var x = tree.getGroupNodes();
+    console.log(x);
+    var s = '';
+    for(var i = 0; i < x.length; i++)
+    {
+        s+=x[i].id+',';
+    }
+    return s;
+  },
+  getAtlasNodeIDs : function(){
+    var x = tree.getAtlasNodes();
+    console.log(x);
+    var s = '';
+    for(var i = 0; i < x.length; i++)
+    {
+        s+=x[i].id+',';
+    }
+    return s;
+  },
 
 };
 

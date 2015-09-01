@@ -6,6 +6,9 @@ script_dir=/raid1b/STBBapps/DTIREG/bin
 ami_path=/raid1e/nayaka/DTIreg_executables
 other_code_path=/raid1e/raid1_restore/codes/my_codes/DTIReg
 
+src_group=$6
+tgt_group=$7
+
 echo "4 = "$4
 work_dir=$4
 
@@ -27,8 +30,8 @@ pushd $PWD
 
 cd $1
 rm *~
-rm ../controls/*~
-rm ../patients/*~
+rm ../${3}/*~
+rm ../${2}/*~
 original_files=$PWD/original_files.txt
 
 chmod 777 *
@@ -71,16 +74,16 @@ do
     fname=${array[$index]:0:nchars-4}
      
     # Combine this combined with each patient's combined
-    ${repo_dir}/combine_xform_helper.sh ${work_dir}/patients/combined_displacement_${fname}.nii ${work_dir}/working/combined_displacement_${2}_average_template_diffeo_6.nii ${work_dir}/working/cd_${fname}.nii
+    ${repo_dir}/combine_xform_helper.sh ${work_dir}/$2/combined_displacement_${fname}.nii ${work_dir}/working/combined_displacement_${2}_average_template_diffeo_6.nii ${work_dir}/working/cd_${fname}.nii
     #THEN, do Apply Transformation to tensor 
     
-    ${script_dir}/ApplyTransformationToTensor ${work_dir}/patients/${fname}.nii ${work_dir}/working/cd_${fname}.nii ${work_dir}/working/final_warped_output_${fname}.nii FS ${work_dir}/controls/average_template_diffeo_6.nii
+    ${script_dir}/ApplyTransformationToTensor ${work_dir}/$2/${fname}.nii ${work_dir}/working/cd_${fname}.nii ${work_dir}/working/final_warped_output_${fname}.nii FS ${work_dir}/${3}/average_template_diffeo_6.nii
     
     # make the file to pass into idl script
     echo "$PWD/final_warped_output_${fname}.nii" >> "$outFiles"
     
-    echo "$index  (COMB TRANS) fname=$fname  |  ${work_dir}/patients/combined_displacement_${fname}.nii  |  ${work_dir}/working/combined_displacement_${2}_average_template_diffeo_6.nii  |  ${work_dir}/working/cd_${fname}.nii" >> "status.txt"
-    echo "$index  (APLY TRANS) fname=$fname  |  ${work_dir}/patients/${fname}.nii  |  ${work_dir}/working/cd_${fname}.nii  |  ${work_dir}/working/final_warped_output_${fname}.nii  |  ${work_dir}/controls/average_template_diffeo_6.nii" >> "status.txt"
+    echo "$index  (COMB TRANS) fname=$fname  |  ${work_dir}/${2}/combined_displacement_${fname}.nii  |  ${work_dir}/working/combined_displacement_${2}_average_template_diffeo_6.nii  |  ${work_dir}/working/cd_${fname}.nii" >> "status.txt"
+    echo "$index  (APLY TRANS) fname=$fname  |  ${work_dir}/${2}/${fname}.nii  |  ${work_dir}/working/cd_${fname}.nii  |  ${work_dir}/working/final_warped_output_${fname}.nii  |  ${work_dir}/${3}/average_template_diffeo_6.nii" >> "status.txt"
     
     index=$((index+1))
     echo "done with iteration # "$index

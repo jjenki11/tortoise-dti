@@ -1,6 +1,21 @@
  var childProcess = require('child_process'),
-    comb_trans,rf;
+     ls,
+     ct,
+     cp,
+     rb,
+     create_template,
+     gxf,
+     rag,
+     attt,
+     scrape,
+     csv,
+     comb_trans;
+     
+     
     var current_category = null;
+    
+    var subject_data = [];
+    
     
     var patient_subjects = [];
     var control_subjects = [];
@@ -9,16 +24,41 @@
     var CoreLibsPath = project.getCoreDirName();
     
     var ProjectPath  = project.getDirName(); // Server/Projects
-    var ProjectName = ProjectPath+'/Projects/hellos';//  = project.getProjectName();
-    
+    var ProjectName = ProjectPath+'/Projects/hellos';//  = project.getProjectName();    
     
     var ScraperProxy = require('./ScraperProxy.js').ScraperProxy;
     var SceneGraphProxy = require('./SceneGraphProxy.js').SceneGraphProxy;
     
     
 var TortoiseProxy =
-{
-
+{    
+    getAllSubjectData : function()
+    {
+        return this.subject_data;
+    },
+    getSubjectDataByGroup : function(group)
+    {
+        var x = this.getAllSubjectData();
+        if(!x){console.log('group does not exist');return null};
+        for(var i = 0; i < x.length; i++)
+        {
+            if(x[i].id == group)
+            {
+                return x[i].data;
+            }
+        }
+    },     
+    setSubjectData : function(data)
+    {
+        this.subject_data = data;
+    },
+    addSubjectData : function(subs)
+    {
+        var x = this.getAllSubjectData();
+        if(!x) x = [];
+        x.push( { id: subs.id, data: subs.data} );
+        this.setSubjectData(x);    
+    },
     child_ls: function(dir,callback)
     {
      ls = childProcess.exec('ls -lsa '+dir, function (error, stdout, stderr) {

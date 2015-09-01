@@ -217,7 +217,8 @@
     
         controls: {
             path: "controls",
-            list_file: ""  
+            list_file: "",
+            label: ""
         },
         patients: {
             path: "patients",
@@ -225,7 +226,8 @@
         },
         atlas: {
             path: "atlas",
-            list_file: ""  
+            list_file: "",
+            label: ""
         },
     };
 
@@ -243,7 +245,7 @@
     var em_forum;
     
     var project_setup;
-
+    var waiting = false;
   $(document).ready(function(){
       
         gojs_helper.init("myDiagram",sock);
@@ -277,40 +279,50 @@
             {
                 case 'control' :
                     file_struct.controls.list_file = label;
-                    sock.send('read_list_file', {path: "controls/"+label, cat: 'control'});
+                    sock.send('read_list_file', {path: gojs_helper.getCurrentSelection()+"/"+label, cat: 'control', id: gojs_helper.getCurrentSelection()});
                     break;
                 case 'patient' :
                     file_struct.patients.list_file = label;
-                    sock.send('read_list_file', {path: "patients/"+label, cat: 'patient'});
+                    sock.send('read_list_file', {path: gojs_helper.getCurrentSelection()+"/"+label, cat: 'patient', id: gojs_helper.getCurrentSelection()});
                     break;
                 case 'atlas'   :
-                    sock.send('read_list_file', {path: "atlas/"+label, cat: 'atlas'});
+                    sock.send('read_list_file', {path: gojs_helper.getCurrentSelection()+"/"+label, cat: 'atlas', id: gojs_helper.getCurrentSelection()});
                     break;
                 default        :
                     console.log('unhandled exception!?');
             }
         });
+        
+
         $("#control_exec").on('click', function(event, ui) {
+            // Change this TBD
+            var ctrl_path = 'Control_Group';
             sock.send('create_template', {
-                path: "controls/"+file_struct.controls.list_file,
+               // path: gojs_helper.getCurrentSelection()+"/"+file_struct.controls.list_file,
+                path: ctrl_path+"/"+file_struct.controls.list_file,
                 step: "0", 
                 exec_path: "/raid1b/STBBapps/DTIREG/bin/",
-                group: 'control'
+                group: ctrl_path
+               // group: gojs_helper.getCurrentSelection()
             });
         });
-        $("#patient_exec").on('click', function(event, ui) {
+        $("#patient_exec").on('click', function(event, ui) {        
+            // Change this TBD
+            var pat_path = 'Patient_Group';
             sock.send('create_template', {
-                path: "patients/"+file_struct.patients.list_file,
+               // path: gojs_helper.getCurrentSelection()+"/"+file_struct.patients.list_file,
+                path: pat_path+"/"+file_struct.patients.list_file,
                 step: "0", 
                 exec_path: "/raid1b/STBBapps/DTIREG/bin/",
-                group: 'patient'
-            });
+                group: pat_path
+               // group: gojs_helper.getCurrentSelection()
+            });            
         });
         $("#complete_exec").on('click', function(event, ui) {
             sock.send('reg_and_combine', {
                 working_path: 'working',
-                label_src: 'patient',
-                label_tgt: 'control',
+                label_src: 'Patient_Group',
+                label_tgt: 'Control_Group',
                 base_path: ''
             });
         });
@@ -381,8 +393,7 @@
                 $("#sample_progress").hide();
                 $("#faq_content").html(fa.content());
                 $("#faq_content").show();
-        });
-        
+        });        
         $("#show_derived_values").on('click', function(event, ui) {        
             var selected_vals = [];
             $.each($("input[name='der_vals']:checked"),
@@ -416,6 +427,14 @@
             gojs_helper.updateSceneGraph(x);
             sock.send('scene_graph', {data: myDiagram.model.toJson(), txt: "update"});  
         });
+        
+        $("#execute_tree").on('click', function(event, ui) {
+            $("#get_graph_props").click();
+            $("#update_graph").click();
+            $("#patient_exec").click();
+            $("#control_exec").click();
+            sock.send('scene_graph', {data: myDiagram.model.toJson(), txt: "execute"});  
+        });
         $("#show_graph").on('click', function(event, ui) {
           if($("#plot_chart").is(":visible"))
           {
@@ -448,13 +467,13 @@
             //chart_helper.addData(data_to_add); 
         });
         $('#control_grps').on('click', function(event, ui) {            
-            sock.send('populate_list', {});
+            sock.send('populate_list', {id: gojs_helper.getCurrentSelection()});
         });
         $('#patient_grps').on('click', function(event, ui) {            
-            sock.send('populate_list', {});
+            sock.send('populate_list', {id: gojs_helper.getCurrentSelection()});
         });
         $('#atlas_grps').on('click', function(event, ui) {            
-            sock.send('populate_list', {});
+            sock.send('populate_list', {id: gojs_helper.getCurrentSelection()});
         });
         $("#controlFile").on('click', function(event, ui) {
             sock.setNodeLabel('control');
@@ -476,9 +495,68 @@
             $("#sample_pipeline").hide();            
             $("#sample_visualize").hide();
             $("#sample_progress").show();  
-            sock.send('monitor_progress', { dir: 'working', fileArray: ['1.nii', '2.nii', '3.nii']});    
-              
+            if(!waiting){
+                sock.send('monitor_progress', { 
+                    dir: 'Patient_Group', 
+                    fileArray: [
+                        'average_template_affine_0.nii', 
+                        'average_template_affine_1.nii', 
+                        'average_template_affine_2.nii',
+                        'average_template_affine_3.nii', 
+                        'average_template_affine_4.nii',
+                        'average_template_diffeo_0.nii', 
+                        'average_template_diffeo_1.nii',
+                        'average_template_diffeo_2.nii', 
+                        'average_template_diffeo_3.nii',
+                        'average_template_diffeo_4.nii', 
+                        'average_template_diffeo_5.nii',
+                        'average_template_diffeo_6.nii',
+                        'read_path.txt'
+                    ],
+                    type: 'template'
+                }); 
+                
+                sock.send('monitor_progress', {
+                    dir: 'Control_Group',
+                    fileArray: [
+                        'average_template_affine_0.nii', 
+                        'average_template_affine_1.nii', 
+                        'average_template_affine_2.nii',
+                        'average_template_affine_3.nii', 
+                        'average_template_affine_4.nii',
+                        'average_template_diffeo_0.nii', 
+                        'average_template_diffeo_1.nii',
+                        'average_template_diffeo_2.nii', 
+                        'average_template_diffeo_3.nii',
+                        'average_template_diffeo_4.nii', 
+                        'average_template_diffeo_5.nii',
+                        'average_template_diffeo_6.nii',
+                        'read_path.txt'
+                    ],
+                    type: 'template',
+                    count: 2
+                });   
+                waiting = true;
+                console.log('sending scraper is now locked.');
+            }              
         });
+        
+        sock.attachHandler('templates_are_complete', function(data){
+        
+            $("#complete_exec").click();
+            
+            sock.send('monitor_progress', {
+                    dir: 'working',
+                    fileArray: [
+                        'original_files.txt',
+                        'status.txt',
+                        'final_output_files.txt'
+                    ],
+                    type: 'register'
+                });   
+            
+        });
+        
         $('#visualize_stuff').on('click', function(event, ui) {
             console.log("VISUALIZE STUFF");
             $("#sample_pipeline").hide();
@@ -718,12 +796,12 @@ $(function() {
                             <a href="#">
                                 <div>
                                     <p>
-                                        <strong>Task 1</strong>
-                                        <span class="pull-right text-muted">40% Complete</span>
+                                        <strong>Build Patient Template</strong>
+                                        <span class="pull-right text-muted" id="Patient_Group_Text">0% Complete</span>
                                     </p>
                                     <div class="progress progress-striped active">
-                                        <div class="progress-bar progress-bar-success" id="TASK_1_PROGRESS" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%">
-                                            <span class="sr-only" value="40% Complete (success)"></span>
+                                        <div class="progress-bar progress-bar-success" id="Patient_Group_Progress" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+                                            <span class="sr-only" value="0% Complete (success)"></span>
                                         </div>
                                     </div>
                                 </div>
@@ -734,12 +812,12 @@ $(function() {
                             <a href="#">
                                 <div>
                                     <p>
-                                        <strong>Task 2</strong>
-                                        <span class="pull-right text-muted">20% Complete</span>
+                                        <strong>Build Control Template</strong>
+                                        <span class="pull-right text-muted" id="Control_Group_Text">0% Complete</span>
                                     </p>
                                     <div class="progress progress-striped active">
-                                        <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: 20%">
-                                            <span class="sr-only">20% Complete</span>
+                                        <div class="progress-bar progress-bar-info" id="Control_Group_Progress" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+                                            <span class="sr-only">0% Complete</span>
                                         </div>
                                     </div>
                                 </div>
@@ -750,12 +828,12 @@ $(function() {
                             <a href="#">
                                 <div>
                                     <p>
-                                        <strong>Task 3</strong>
-                                        <span class="pull-right text-muted">60% Complete</span>
+                                        <strong>Register Patients to Control Template</strong>
+                                        <span class="pull-right text-muted" id="Register_Patient_Group_to_Control_Group_Text">0% Complete</span>
                                     </p>
                                     <div class="progress progress-striped active">
-                                        <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%">
-                                            <span class="sr-only">60% Complete (warning)</span>
+                                        <div class="progress-bar progress-bar-warning" id="Register_Patient_Group_to_Control_Group_Progress" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+                                            <span class="sr-only">0% Complete (warning)</span>
                                         </div>
                                     </div>
                                 </div>
@@ -766,22 +844,15 @@ $(function() {
                             <a href="#">
                                 <div>
                                     <p>
-                                        <strong>Task 4</strong>
-                                        <span class="pull-right text-muted">80% Complete</span>
+                                        <strong>Derive ROI data</strong>
+                                        <span class="pull-right text-muted">0% Complete</span>
                                     </p>
                                     <div class="progress progress-striped active">
-                                        <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" style="width: 80%">
-                                            <span class="sr-only">80% Complete (danger)</span>
+                                        <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+                                            <span class="sr-only">0% Complete (danger)</span>
                                         </div>
                                     </div>
                                 </div>
-                            </a>
-                        </li>
-                        <li class="divider"></li>
-                        <li>
-                            <a class="text-center" href="#">
-                                <strong>See All Tasks</strong>
-                                <i class="fa fa-angle-right"></i>
                             </a>
                         </li>
                     </ul>
@@ -806,10 +877,10 @@ $(function() {
         </div>
 <span class="btn btn-default" id="show_derived_values">Show Selected Derived Values</span>
 <span class="btn btn-default" id="get_graph_props">Get Graph Properties</span>
-<span class="btn btn-default" id="update_graph">update graph</span>
+<span class="btn btn-default" id="update_graph">Update Graph</span>
 <span class="btn btn-default" id="show_graph">Show Plot/Graph</span>
 <span class="btn btn-default" id="plot_ROI_data">Plot ROI Data</span>
-
+<span class="btn btn-default" id="execute_tree">Run Current Layout</span>
     
     <div class="panel panel-default">
         <div class="panel-heading">

@@ -1,5 +1,10 @@
-  var AssetTreeProxy = function( ) {  
+
+// AssetTreeProxy is an interface to traverse a hierarchical structure from the server.  This will require more work
+
+var AssetTreeProxy = function( ) {  
   
+  
+  // Template node will contain information about external template and all groups being registered to it
     var TemplateNode = function() {    
       var avg_template_affines = [];
       var avg_template_diffeos = [];
@@ -50,6 +55,7 @@
     };
   };
   
+  // Transform node will hold data which explains morph from original to new space
   var TransformNode = function() {    
     var affine = null;
     var deffield = null;
@@ -76,6 +82,7 @@
     };          
   };
   
+  // Group node will hold data such as subject list, template filename, and list of other transformations, etc.
   var GroupNode = function() {  
     var subjects   = [];
     var transforms = [];
@@ -93,6 +100,9 @@
         addSubjectNode   : function(node){        
             subjects.push(node);
         },
+        setSubjects      : function(data){
+            subjects = data;
+        },
         getSubjects      : function(){
             return subjects;
         },
@@ -107,6 +117,7 @@
     };
   };
   
+  // Subject node will hold data such as filename, transform to template, etc
   var SubjectNode = function() {  
     var transforms = [];
     var metadata   = {id:null, group: null};
@@ -133,7 +144,7 @@
     };   
   };
 
-
+// Generic tree node object - can be any type of category node
   var TreeNode = function(type) {
     var level    = 0;  
     var children = [];
@@ -222,13 +233,12 @@
     };  
   };
   
-  
-  
-  
         var strOut = [];
         var nodes = [];    //list of {data: ..., ...}
         var branches = []; //list of {from: x, to: y}
         var root = null;
+        
+        // Returns a node having a certain key
         function findNode(key)
         {
             for(var i = 0; i < nodes.length; i++)
@@ -240,6 +250,8 @@
             }
             return null;
         };
+        
+        // insert a node into the tree, TBD make category specific node types more solid
         function insertNode(node)
         {
             var d = node.getData();
@@ -291,6 +303,7 @@
             }            
         };
         
+        // TBD to sync parents and children pointers
         function performNodeUnion(child, parent)
         {
             if(!child) {
@@ -307,13 +320,16 @@
             }
         };
         
+        // return category element
         function getCategory(data)
         {
             return data.category;
         };                
         
+        
+        // api
         return {        
-                       
+            // Returns list of nodes having group no parents   
             getRootNodes     : function(){
                 var dNodes = nodes;
                 var roots = [];
@@ -331,6 +347,7 @@
                 root = roots;    
                 return roots;
             },
+            // Returns list of nodes having no children
             getLeafNodes     : function(){
                 var dNodes = nodes;
                 var leaves = [];
@@ -346,6 +363,7 @@
                 }                
                 return leaves;
             },
+            // Returns list of nodes having neither parents nor children
             getIsolatedNodes : function(){
                 var dNodes = nodes;
                 var lonelies = [];
@@ -361,6 +379,7 @@
                 }                
                 return lonelies;
             },
+            // Returns list of nodes which have both a parent and child
             getInteriorNodes : function(){
                 var dNodes = nodes;
                 var interiors = [];
@@ -376,7 +395,7 @@
                 }                
                 return interiors;
             },
-            
+            // Returns list of nodes having group as their cateogry
             getGroupNodes : function(){
               var gNodes = nodes;
               var groupies = [];
@@ -389,11 +408,24 @@
               }
               return groupies;
             },
-            
+            // Returns list of nodes having atlas as their cateogry
+            getAtlasNodes : function(){
+              var gNodes = nodes;
+              var groupies = [];
+              for(var i = 0; i < gNodes.length; i++)
+              {
+                if((gNodes[i].category == 'Atlas'))
+                {
+                  groupies.push(gNodes[i]);
+                }
+              }
+              return groupies;
+            },
+            // Returns the entire tree
             getTree          : function(){
                 return this;
             },
-            
+            // Really just prints out the types of nodes
             traverseTree     : function() 
             {               
                 console.log('Root nodes     -> ',this.getRootNodes());
@@ -401,6 +433,7 @@
                 console.log('Isolated nodes -> ',this.getIsolatedNodes());
                 console.log('Interior nodes -> ',this.getInteriorNodes());                
             },
+            // recursively explores tree to form heirarchical combinations
             traverseInReverse : function(node, txt,i)
             {
               var tnodes = findNode(node);
@@ -428,7 +461,7 @@
                 console.log(txt);
               }
             },
-            
+            // TBD
             traverseEachPath : function(nodeKey, pathList) 
             {
               var root = findNode(nodeKey);
@@ -452,7 +485,7 @@
                 }
               }
             },          
-        
+            /// Recursively combines string array elements into a single combined string
             aggregateTransforms : function(list,afterFirstTime)
             {
               if(list.length == 1)
@@ -489,9 +522,8 @@
             {
             
             },
-            buildTree        : function(graph){      
-              console.log(graph);
-                        
+            // builds a tree our of a scene graph
+            buildTree        : function(graph){                        
                 var verts = graph.nodes;
                 var edges = graph.edges;
                 var tmpNode;
@@ -507,23 +539,16 @@
                 for(var i=0;i<edges.length;i++)
                 {
                     var child  = findNode(edges[i].fromIndex);
-                    var parent = findNode(edges[i].toIndex);
-                    console.log('toIndex = ',edges[i].toIndex);
-                    console.log('fromIndex = ',edges[i].fromIndex);               
+                    var parent = findNode(edges[i].toIndex);         
                 }  
                 nodes = verts;
-
                 this.traverseTree(nodes[0].key,0,0);      
                 var t = this.traverseInReverse(nodes[0].key, '');
-                
-                console.log('we returned ... ',t.reverse());
-                this.aggregateTransforms(t); 
-                
+                this.aggregateTransforms(t);
             }, 
+            // updates the tree with a scene graph
             updateTree : function(graph){
               strOut = [];
-              console.log(graph);
-              //var x = JSON.parse(g);
                 var verts = graph.nodes;
                 var ed = graph.edges;
                 var tmpEdges = ed;
@@ -541,23 +566,15 @@
                 for(var i=0;i<tmpEdges.length;i++)
                 {
                     var child  = findNode(tmpEdges[i].fromIndex);
-                    var parent = findNode(tmpEdges[i].toIndex);
-                    console.log('toIndex = ',tmpEdges[i].toIndex);
-                    console.log('fromIndex = ',tmpEdges[i].fromIndex);              
+                    var parent = findNode(tmpEdges[i].toIndex);        
                 }  
-                console.log('now we want to traverse...');
-                nodes = verts;
-                //edges = tmpEdges;
-                /*
-                this.traverseTree(nodes[0].key,0,0);    
-                  var t = this.traverseInReverse(nodes[0].key, '');
-                  this.aggregateTransforms(t.reverse());  */               
+                nodes = verts;      
             },
-            printTransforms : function(){
-            
+            // print the hierarchical transformation
+            printTransforms : function(){            
               console.log(strOut);
             },           
-            
+            // TBD visit all assets in the tree to get properties
             VisitAssets : function(node) {            
               var groups = this.getGroupNodes();
               for(var i = 0; i < groups.length; i++)
@@ -566,5 +583,6 @@
               }            
             },        
         };
-  };
+};
+// make our AssetTreeProxy known to the rest of the world
 module.exports.AssetTreeProxy = AssetTreeProxy;

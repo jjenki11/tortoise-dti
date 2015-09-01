@@ -107,17 +107,34 @@ var nodeConnection = function()
     });
 
 	socket.on('plot_data', function(data) {	  
-    plugins.updatePlotWindow(data);
+        plugins.updatePlotWindow(data);
+	});
+	
+	socket.on('completed_template_progress', function(data) {
+	    console.log('just completed ',data.task, ' and there are ',data.remaining,' remaining.');
+	    if((data.remaining == 0) && (data.task == 'Control_Group'))
+	    {
+	        socket.emit('templates_are_complete',{});
+	    }
+	});
+	
+	socket.on('completed_register_progress', function(data) {
+	    console.log('just completed ',data.task, ' and there are ',data.remaining,' remaining.');
+	    if(data.remaining == 0)
+	    {
+	        socket.emit('registration_is_complete',{});
+	    }
 	});
 	
 	socket.on('progress_update', function(data){
-	  //$("#TASK_1_PROGRESS").css('aria-valuenow', (data.percent_done));
-	  $('.TASK_1_PROGRESS').css('width', data.percent_done+'%').attr('aria-valuenow', data.percent_done);
-    $('#TASK_1_PROGRESS').css('width', data.percent_done+'%').attr('aria-valuenow', data.percent_done);
-	  
-	  //$("TASK_1_PROGRESS").html(outer);
+	  var prog = data.bar_id+'_Progress';
+	  var txt  = data.bar_id+'_Text';	  
+	  $('.'+prog).css('width', data.percent_done+'%').attr('aria-valuenow', data.percent_done);
+      $('#'+prog).css('width', data.percent_done+'%').attr('aria-valuenow', data.percent_done);
+      $('#'+txt).text(data.percent_done+'% complete');
 	  console.log('percent done = ',data.percent_done);
 	  console.log('name         = ',data.name);
+	  console.log('bar id       = ',data.bar_id);
 	/*
 	  sock.emit('progress_update', {percent_done: 0, name: 'test'});
 	*/
