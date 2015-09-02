@@ -106,15 +106,15 @@ var ScraperProxy =
              // check if 100%
              if( ~~((getAsyncProcess(data.dir).progress / getAsyncProcess(data.dir).nFiles)*100) == 100 ){
                 var sz = asyncList.length;
-                removeAsyncProcess(data.dir);
-                console.log('Removed the process, see?  before = ',sz, ' after = ',asyncList.length);
+                //removeAsyncProcess(data.dir);
+                //console.log('Removed the process, see?  before = ',sz, ' after = ',asyncList.length);
                 if(data.type == 'template' && (sz == 0))
                 {
-                    sock.emit('completed_template_progress', {task: data.dir, remaining: asyncList.length});
+                    //sock.emit('completed_template_progress', {task: data.dir, remaining: asyncList.length});
                 }
                 if(data.type == 'register' && (sz == 0))
                 {
-                    sock.emit('completed_register_progress', {task: data.dir, remaining: asyncList.length});
+                    //sock.emit('completed_register_progress', {task: data.dir, remaining: asyncList.length});
                 }
              }
           });        

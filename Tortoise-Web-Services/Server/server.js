@@ -176,7 +176,7 @@ function child_CreateTemplate(data)
 
 function child_ROIBusiness(data)
 {
-   rb = childProcess.exec(CoreLibsPath+'/roi_business.sh '+data.derived_values + ' '+ProjectName+'working_atlas/roi_list.txt '+ ProjectName+'working_atlas/roi_business_out patients '+ProjectName+'working/', function (error, stdout, stderr) {
+   rb = childProcess.exec(CoreLibsPath+'/roi_business.sh '+data.derived_values + ' '+ProjectName+'working_atlas/roi_list.txt '+ ProjectName+'working_atlas/roi_business_out Patient_Group '+ProjectName+'working/', function (error, stdout, stderr) {
    if (error) {
      console.log(error.stack);
      console.log('Error code: '+error.code);
