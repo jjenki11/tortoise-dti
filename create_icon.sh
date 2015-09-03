@@ -10,7 +10,7 @@ explain="Run web server and client app"
 icon_path=$p/Tortoise-Web-Services/Web/img/turtle-icon.ico
 exe_path=$p/QuickStart.sh
 exe_args="%"$p
-term="false"
+term="true"
 appType="Application"
 
 rm ~/Desktop/QuickStart.desktop
