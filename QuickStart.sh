@@ -1,8 +1,10 @@
 #!/bin/bash
-echo 'this will do an automatic check for updates then launch the server.  after this is successful, the application will launch in the browser.'
-path=$PWD
-xterm -e git pull &
 
-xterm -e node /home/jeff/Desktop/tortoise_repo/tortoise-dti/Tortoise-Web-Services/Server/server.js &
+echo 'this will (eventually with a GUI/progress bar) do an automatic check for updates then launch the server.  after this is successful, the application will launch in the browser.'
 
-firefox /home/jeff/Desktop/tortoise_repo/tortoise-dti/Tortoise-Web-Services/Web/index_page.html &
+# pull updates
+cd /${1} && git pull;
+# launch web server
+xterm -e node /${1}'/Tortoise-Web-Services/Server/server.js' &
+# launch browser w/ app
+firefox /${1}'/Tortoise-Web-Services/Web/index_page.html' &
