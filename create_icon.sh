@@ -2,7 +2,6 @@
 
 #  This script creates an icon as well as an executable file on the desktop.
 #     Double click the turtle icon on the desktop and you can minimize the server window
-export tws_path=$PWD;
 p=$PWD
 name="QuickStart.desktop"
 exe_name="Tortoise Atlas Manager"
