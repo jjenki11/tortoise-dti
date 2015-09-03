@@ -4,7 +4,6 @@ echo 'this will (eventually with a GUI/progress bar) do an automatic check for u
 
 #notice that you can drop files onto the launcher and the launcher will save the filename(s) in ascending order of  '$2, ...'..  This is useful to make launchers to visualize displacement maps  or dec maps etc in the meantime.
 
-
 # pull updates
 cd /${1} && git pull;
 # launch web server
