@@ -256,7 +256,7 @@ var nodeConnection = function()
 	function init(pluginHandler)
 	{
 	  plugins = pluginHandler;
-	  send('atlas', {txt: "SUP IM HERE "});
+	  send('atlas', {txt: "Client message sent to server : "});
 	};
 	
 	return { 
@@ -269,6 +269,3 @@ var nodeConnection = function()
 	  setChartHelper: setChartHelper,
 	};
 };
-
-
-

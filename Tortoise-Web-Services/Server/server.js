@@ -155,6 +155,7 @@ function child_CreateTemplate(data)
     console.log(ProjectName+data.path);
     // the 'y' is for yes!
     //  this fixes image mismatch due to mipav dropping a slice
+    
     create_template = childProcess.exec('cd '+ data.exec_path+' && /raid1b/STBBapps/DTIREG/bin/dtireg_create_template_jeff '+ProjectName+data.path+' '+data.step+' '+data.exec_path+' < '+ProjectName+"answer_file.txt &", function(error, stdout, stderr) {
     if(error){
      console.log(error.stack);
@@ -247,8 +248,9 @@ function child_RegAndCombine(data)
 function child_createProject(data)
 {
     console.log('INSIDE createProject '+data);
+    console.log(__dirname+'/create_project.sh', 'is this a valid path?')
     if(data.folderArgs){
-        cp = childProcess.exec('./create_project.sh '+data.project_name+ ' '+data.folderArgs, function(error, stdout, stderr) {        
+        cp = childProcess.exec(ProjectPath+'/create_project.sh '+data.project_name+ ' '+data.folderArgs, function(error, stdout, stderr) {        
         if(error){
          console.log(error.stack);
          console.log('Error code: '+error.code);
@@ -306,7 +308,7 @@ io.sockets.on('connection', function(socket){
   
   
   socket.on('atlas', function(data){
-    console.log(data.txt+" IN MY ATLAS");
+    console.log(data.txt+": received in Atlas Server");
   });
   
   socket.on('new_project', function(data){    

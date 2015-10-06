@@ -32,7 +32,8 @@ cd $1
 rm *~
 rm ../${3}/*~
 rm ../${2}/*~
-original_files=$PWD/original_files.txt
+A_original_files=$PWD/${2}\_original_files.txt
+B_original_files=$PWD/${3}\_original_files.txt
 
 chmod 777 *
 
@@ -45,13 +46,23 @@ ${repo_dir}/combine_xform_helper.sh ${PWD}/${2}_average_template_diffeo_6_aff.tx
 
 
 # Read the file in parameter and fill the array named "array"
-array=()
+arrayA=()
+arrayB=()
 
-getArray() {
+getArrayA() {
     i=0
     while read line # Read a line
     do
-        array[i]=$line # Put it into the array
+        arrayA[i]=$line # Put it into the array
+        i=$(($i + 1))
+    done < $1
+}
+
+getArrayB() {
+    i=0
+    while read line # Read a line
+    do
+        arrayB[i]=$line # Put it into the array
         i=$(($i + 1))
     done < $1
 }
@@ -60,18 +71,20 @@ outFiles=${work_dir}/working/final_output_files.txt
 
 rm $outFiles
 
-getArray ${original_files}
+getArrayA ${A_original_files}
+
+getArrayB ${B_original_files}
 
 index=0
 
-NIter=`cat ${original_files} | wc -l`
+NIterA=`cat ${A_original_files} | wc -l`
 
-echo "before loop with "$NIter " iterations."
+echo "before loop with "$NIterA " iterations."
 
-while [ $index -lt $NIter ]
+while [ $index -lt $NIterA ]
 do
-    nchars=${#array[$index]}
-    fname=${array[$index]:0:nchars-4}
+    nchars=${#arrayA[$index]}
+    fname=${arrayA[$index]:0:nchars-4}
      
     # Combine this combined with each patient's combined
     ${repo_dir}/combine_xform_helper.sh ${work_dir}/$2/combined_displacement_${fname}.nii ${work_dir}/working/combined_displacement_${2}_average_template_diffeo_6.nii ${work_dir}/working/cd_${fname}.nii
@@ -87,8 +100,46 @@ do
     
     index=$((index+1))
     echo "done with iteration # "$index
-    chmod 777 *
+    chmod 777 *  
+    
 done
+
+
+
+
+
+${repo_dir}/combine_xform_helper.sh ${PWD}/${3}_average_template_diffeo_6_aff.txt ${PWD}/${3}_average_template_diffeo_6_deffield_MINV.nii ${work_dir}/working/combined_displacement_${3}_average_template_diffeo_6.nii
+
+
+index=0
+NIterB=`cat ${B_original_files} | wc -l`
+
+echo "before loop with "$NIterB " iterations."
+
+while [ $index -lt $NIterB ]
+do
+    ###########   NEW PART TO DO CONTROL TEMPLATE REG ALSO
+    nchars=${#arrayB[$index]}
+    fname=${arrayB[$index]:0:nchars-4}
+     
+    # Combine this combined with each patient's combined
+    ${repo_dir}/combine_xform_helper.sh ${work_dir}/$3/combined_displacement_${fname}.nii ${work_dir}/working/combined_displacement_${3}_average_template_diffeo_6.nii ${work_dir}/working/cd_${fname}.nii
+    #THEN, do Apply Transformation to tensor 
+    
+    ${script_dir}/ApplyTransformationToTensor ${work_dir}/$3/${fname}.nii ${work_dir}/working/cd_${fname}.nii ${work_dir}/working/final_warped_output_${fname}.nii FS ${work_dir}/${3}/average_template_diffeo_6.nii
+    
+    # make the file to pass into idl script
+    echo "$PWD/final_warped_output_${fname}.nii" >> "$outFiles"
+    
+    echo "$index  (COMB TRANS) fname=$fname  |  ${work_dir}/${3}/combined_displacement_${fname}.nii  |  ${work_dir}/working/combined_displacement_${3}_average_template_diffeo_6.nii  |  ${work_dir}/working/cd_${fname}.nii" >> "status.txt"
+    echo "$index  (APLY TRANS) fname=$fname  |  ${work_dir}/${3}/${fname}.nii  |  ${work_dir}/working/cd_${fname}.nii  |  ${work_dir}/working/final_warped_output_${fname}.nii  |  ${work_dir}/${3}/average_template_diffeo_6.nii" >> "status.txt"
+    
+    index=$((index+1))
+    echo "done with iteration # "$index
+    chmod 777 *
+
+done 
+
 
 cd /raid1e/okan/DATA/DTIREG_paper_data/scripts/batch_import_dtireg/
 idl -e "batch_import_dtireg_main,'$outFiles'"

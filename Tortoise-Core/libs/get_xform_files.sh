@@ -18,10 +18,10 @@ chmod 777 *
 
 group_name=$2
 
-rm affine_files.txt
-rm deffield_files.txt
-rm original_files.txt
-rm combined_displacement*.nii
+#rm affine_files.txt
+#rm deffield_files.txt
+#rm original_files.txt
+#rm combined_displacement*.nii
 rm *~
 
 affine_files=$PWD/affine_files.txt
@@ -141,7 +141,6 @@ do
 # combine affine and diffeo into combined_displacement*.nii
     nchars=${#array3[$index]}
     ORIGINAL=${array3[$index]:0:nchars-4} 
-#    Комбинированное смещение
     $repo_dir/combine_xform_helper.sh $PWD/"${array1[$index]}" $PWD/"${array2[$index]}" $PWD/combined_displacement_${ORIGINAL}.nii
 # apply transformation to tensor :- <original>, <combined_displacement>, <output_file>, <reorientation_type>, <provide final atlas for correct dimensions>
     echo "FIAIAIFNA = "${ORIGINAL}
@@ -170,6 +169,6 @@ if [ -z "$3" ]
     exit
 fi
 
-cp $original_files $work_dir/working
+cp $original_files $work_dir/working/${2}\_original_files.txt
 popd
 exit
